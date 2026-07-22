@@ -413,6 +413,31 @@ body{
   line-height:1.55;
   max-width:40ch;
 }
+.form-notice{
+  margin:16px 0 0;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid rgba(196,92,38,.28);
+  background:rgba(196,92,38,.09);
+  max-width:48ch;
+}
+.form-notice strong{
+  display:block;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--copper);
+  margin-bottom:5px;
+}
+.form-notice p{
+  margin:0;
+  max-width:none;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink);
+  font-weight:600;
+}
 
 .progress{display:flex;gap:8px;padding:20px 28px 0}
 .progress span{

@@ -40,14 +40,14 @@
       <a class="btn btn-ghost" href="index.html" target="_blank" rel="noopener" title="Abrir inscrição de cursistas"><span class="lbl-long">Ficha cursistas</span><span class="lbl-short">Cursistas</span></a>
       <a class="btn btn-ghost" href="servos.html" target="_blank" rel="noopener" title="Abrir inscrição de servos"><span class="lbl-long">Ficha servos</span><span class="lbl-short">Servos</span></a>
       <span class="sep" aria-hidden="true"></span>
-      <button class="btn btn-ghost" type="button" id="refreshBtn" title="Recarregar dados"><span class="lbl-long">Atualizar</span><span class="lbl-short">↻</span></button>
+      <button class="btn btn-ghost" type="button" id="refreshBtn" title="Recarregar dados"><span class="lbl-long">Atualizar</span><span class="lbl-short">Atualizar</span></button>
       <button class="btn btn-primary" type="button" id="exportBtn">Exportar</button>
       <button class="btn btn-ghost" type="button" id="logoutBtn">Sair</button>
     </div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Seções do painel">
-    <button type="button" class="tab active" data-view="inscricoes" role="tab" aria-selected="true">Inscrições</button>
+    <button type="button" class="tab active" data-view="inscricoes" role="tab" aria-selected="true">Cursistas</button>
     <button type="button" class="tab" data-view="servos" role="tab" aria-selected="false">Servos</button>
     <button type="button" class="tab" data-view="decurias" role="tab" aria-selected="false">Decúrias</button>
     <button type="button" class="tab" data-view="camisas" role="tab" aria-selected="false">Camisas</button>
@@ -104,7 +104,7 @@
             <tbody id="tbody"></tbody>
           </table>
         </div>
-        <div class="empty" id="empty" hidden>Nenhuma inscrição neste filtro.<br><span class="muted">Ajuste a busca ou o status acima.</span></div>
+        <div class="empty" id="empty" hidden>Nenhum cursista neste filtro.<br><span class="muted">Ajuste a busca ou o status acima.</span></div>
         <div class="status-bar">
           <span id="statusText">Carregando…</span>
           <span id="autoText" class="muted">Atualiza a cada 45s</span>
@@ -114,11 +114,11 @@
 
     <aside class="side">
       <div class="panel">
-        <h3>Camisas por tamanho</h3>
+        <h3>Camisas — cursistas</h3>
         <div id="shirtBars"></div>
         <div class="block" style="margin-top:20px">
-          <h3>Atenção — saúde</h3>
-          <div class="alert-list" id="healthList"></div>
+          <h3>Atenção — saúde (cursistas)</h3>
+          <div id="healthList"></div>
         </div>
       </div>
     </aside>
@@ -180,7 +180,7 @@
           <select id="shirtSize">
             <option value="">Todos</option>
             <option>PP</option><option>P</option><option>M</option>
-            <option>G</option><option>GG</option><option>XG</option>
+            <option>G</option><option>GG</option><option>XG</option><option>XXG</option>
             <option value="__empty__">Sem tamanho</option>
           </select>
         </div>
@@ -233,6 +233,11 @@
       <div class="toolbar">
         <input class="search" id="servoSearch" type="search" placeholder="Buscar nome, telefone, equipe…">
         <div class="filters">
+          <select id="servoFilterCamisa">
+            <option value="">Camisa</option>
+            <option value="sim">Quer camisa</option>
+            <option value="nao">Não quer</option>
+          </select>
           <select id="servoFilterEquipe">
             <option value="">Equipe: todas</option>
           </select>
@@ -289,6 +294,9 @@
       <select id="dDecuria" aria-label="Decúria">
         <option value="">Sem Decúria</option>
       </select>
+      <select id="dEquipe" aria-label="Equipe do servo" hidden>
+        <option value="">Sem equipe</option>
+      </select>
       <button class="btn btn-ghost btn-sm" type="button" id="editBtn">Editar</button>
       <button class="btn btn-ghost btn-sm" type="button" id="printBtn">Imprimir</button>
       <button class="btn btn-danger btn-sm" type="button" id="deleteBtn">Excluir</button>
@@ -304,41 +312,58 @@
 
 <div class="export-overlay" id="exportOverlay" aria-hidden="true">
   <div class="export-dialog" role="dialog" aria-labelledby="exportDialogTitle">
-    <h2 id="exportDialogTitle">Exportar lista</h2>
-    <p class="hint" id="exportHint">Escolha as colunas e o formato. A lista respeita o filtro atual.</p>
-
-    <div class="field">
-      <label for="exportTitle">Título do documento</label>
-      <input type="text" id="exportTitle" maxlength="120" value="XVI C.O.R Jovem">
-    </div>
-    <div class="field">
-      <label for="exportSubtitle">Subtítulo (opcional)</label>
-      <input type="text" id="exportSubtitle" maxlength="160" placeholder="Ex: Confirmados · Quer camisa · Decúria São José">
-    </div>
-
-    <div class="field">
-      <label>Colunas</label>
-      <div class="export-presets">
-        <button type="button" data-preset="essencial">Essencial</button>
-        <button type="button" data-preset="camisas">Camisas</button>
-        <button type="button" data-preset="contato">Contato</button>
-        <button type="button" data-preset="completo">Completo</button>
-        <button type="button" data-preset="nenhum">Limpar</button>
+    <div class="export-handle" aria-hidden="true"></div>
+    <div class="export-dialog-head">
+      <div>
+        <h2 id="exportDialogTitle">Exportar lista</h2>
+        <p class="hint" id="exportHint">Escolha as colunas e o formato. A lista respeita o filtro atual.</p>
       </div>
-      <div class="export-cols" id="exportCols"></div>
+      <button type="button" class="icon-btn" id="exportCloseX" aria-label="Fechar">×</button>
     </div>
 
-    <div class="export-checks">
-      <label><input type="checkbox" id="exportSummary" checked> Incluir resumo (totais e tamanhos de camisa)</label>
-      <label><input type="checkbox" id="exportCheckCol"> Coluna ✓ de conferência (PDF / impressão)</label>
-      <label><input type="checkbox" id="exportNumbering" checked> Numeração na lista</label>
+    <div class="export-dialog-body">
+      <div class="field">
+        <label for="exportTitle">Título do documento</label>
+        <input type="text" id="exportTitle" maxlength="120" value="XVI C.O.R Jovem">
+      </div>
+      <div class="field">
+        <label for="exportSubtitle">Subtítulo (opcional)</label>
+        <input type="text" id="exportSubtitle" maxlength="160" placeholder="Ex: Confirmados · Quer camisa · Decúria São José">
+      </div>
+
+      <div class="field">
+        <label for="exportPresetSelect">Colunas</label>
+        <select class="export-preset-select" id="exportPresetSelect" aria-label="Predefinição de colunas">
+          <option value="essencial">Essencial</option>
+          <option value="camisas">Camisas</option>
+          <option value="contato">Contato</option>
+          <option value="completo">Completo</option>
+          <option value="nenhum">Limpar seleção</option>
+        </select>
+        <div class="export-presets">
+          <button type="button" data-preset="essencial">Essencial</button>
+          <button type="button" data-preset="camisas">Camisas</button>
+          <button type="button" data-preset="contato">Contato</button>
+          <button type="button" data-preset="completo">Completo</button>
+          <button type="button" data-preset="nenhum">Limpar</button>
+        </div>
+        <div class="export-cols" id="exportCols"></div>
+      </div>
+
+      <div class="export-checks">
+        <label><input type="checkbox" id="exportSummary" checked> Incluir resumo (totais e tamanhos de camisa)</label>
+        <label><input type="checkbox" id="exportCheckCol"> Coluna ✓ de conferência (PDF / impressão)</label>
+        <label><input type="checkbox" id="exportNumbering" checked> Numeração na lista</label>
+      </div>
     </div>
 
-    <div class="export-actions">
-      <button type="button" class="btn btn-excel" id="doExcelBtn">Baixar Excel</button>
-      <button type="button" class="btn btn-pdf" id="doPdfBtn">Baixar PDF</button>
-      <button type="button" class="btn btn-ghost" id="doPrintBtn">Imprimir</button>
-      <button type="button" class="btn btn-ghost" id="exportCloseBtn">Fechar</button>
+    <div class="export-dialog-foot">
+      <div class="export-actions">
+        <button type="button" class="btn btn-excel" id="doExcelBtn">Baixar Excel</button>
+        <button type="button" class="btn btn-pdf" id="doPdfBtn">Baixar PDF</button>
+        <button type="button" class="btn btn-ghost" id="doPrintBtn">Imprimir</button>
+        <button type="button" class="btn btn-ghost" id="exportCloseBtn">Fechar</button>
+      </div>
     </div>
   </div>
 </div>
@@ -532,7 +557,7 @@
       }
       if(!silent){
         document.getElementById('statusText').textContent =
-          rows.length + ' inscrição(ões) · ' + servoRows.length + ' servo(s)';
+          rows.length + ' cursista(s) carregado(s)';
       }
     }catch(err){
       console.error(err);
@@ -643,7 +668,7 @@
   }
 
   function renderSide(){
-    const sizes = ['PP','P','M','G','GG','XG'];
+    const sizes = ['PP','P','M','G','GG','XG','XXG'];
     const counts = {};
     sizes.forEach(s => counts[s] = 0);
     let totalShirts = 0;
@@ -658,26 +683,46 @@
       const n = counts[s];
       const pct = Math.round((n / max) * 100);
       return '<div class="bar-row"><span class="lab">'+s+'</span><div class="track"><div class="fill" style="width:'+pct+'%"></div></div><span class="num">'+n+'</span></div>';
-    }).join('') + '<p class="muted" style="margin:8px 0 0">'+totalShirts+' camisa(s) solicitada(s)</p>';
+    }).join('') + '<p class="muted" style="margin:8px 0 0">'+totalShirts+' camisa(s) de cursistas</p>';
 
-    const alerts = rows.filter(hasHealth).slice(0, 12);
+    const allAlerts = rows.filter(hasHealth);
+    const alerts = allAlerts.slice(0, 8);
     const hl = document.getElementById('healthList');
-    if(!alerts.length){
+    if(!allAlerts.length){
       hl.innerHTML = '<p class="muted" style="margin:0">Nenhum alerta no momento.</p>';
     }else{
-      hl.innerHTML = alerts.map(r=>{
-        const bits = [];
-        if(r.comorbidade === 'sim') bits.push('Comorbidade: ' + (r.comorbidade_qual || '—'));
-        if(r.medicamento === 'sim') bits.push('Med: ' + (r.medicamento_qual || '—'));
-        if(r.alergia === 'sim') bits.push('Alergia: ' + (r.alergia_qual || '—'));
-        return '<div class="alert-item" data-id="'+esc(r.id)+'"><strong>'+esc(r.nome)+'</strong><span class="sub">'+esc(bits.join(' · '))+'</span></div>';
-      }).join('');
+      hl.innerHTML =
+        '<div class="alert-list-head">' +
+          '<span class="count">'+allAlerts.length+' alerta'+(allAlerts.length===1?'':'s')+'</span>' +
+          '<button type="button" id="healthSeeAll">Ver na lista</button>' +
+        '</div>' +
+        '<div class="alert-list" id="healthScroll">' +
+          alerts.map(r=>{
+            const bits = [];
+            if(r.comorbidade === 'sim') bits.push('Comorbidade: ' + (r.comorbidade_qual || '—'));
+            if(r.medicamento === 'sim') bits.push('Med: ' + (r.medicamento_qual || '—'));
+            if(r.alergia === 'sim') bits.push('Alergia: ' + (r.alergia_qual || '—'));
+            return '<div class="alert-item" data-id="'+esc(r.id)+'"><strong>'+esc(r.nome)+'</strong><span class="sub">'+esc(bits.join(' · '))+'</span></div>';
+          }).join('') +
+          (allAlerts.length > alerts.length
+            ? '<p class="muted" style="margin:4px 0 0;font-size:11.5px">+ '+(allAlerts.length - alerts.length)+' na lista completa</p>'
+            : '') +
+        '</div>';
       hl.querySelectorAll('.alert-item').forEach(el=>{
         el.addEventListener('click', ()=>{
           const r = rows.find(x => x.id === el.getAttribute('data-id'));
           if(r) openDetail(r);
         });
       });
+      const seeAll = document.getElementById('healthSeeAll');
+      if(seeAll){
+        seeAll.addEventListener('click', ()=>{
+          statusFilter = '';
+          quickFilter = 'saude';
+          render();
+          document.getElementById('viewInscricoes')?.scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+      }
     }
   }
 
@@ -713,12 +758,26 @@
     });
 
     document.getElementById('statusText').textContent =
-      list.length + ' exibida(s) · ' + rows.length + ' no total';
+      list.length + ' cursista(s) neste filtro · ' + rows.length + ' no total';
+    document.getElementById('autoText').textContent = 'Atualiza a cada 45s · só cursistas';
   }
 
   function item(label, value, full){
     const v = val(value);
     return '<div class="item'+(full?' full':'')+'"><span class="l">'+esc(label)+'</span><div class="d'+(v?'':' empty')+'">'+(v ? esc(Array.isArray(v)?v.join(', '):v) : 'Não informado')+'</div></div>';
+  }
+
+  function itemPhone(label, phone, full){
+    const v = val(phone);
+    const link = v ? waLink(v) : null;
+    const btn = link
+      ? '<a class="wa-mini" href="'+esc(link)+'" target="_blank" rel="noopener">WhatsApp</a>'
+      : '';
+    return '<div class="item'+(full?' full':'')+'"><span class="l">'+esc(label)+'</span>' +
+      '<div class="d phone-row'+(v?'':' empty')+'">' +
+        '<span>'+(v ? esc(v) : 'Não informado')+'</span>' +
+        btn +
+      '</div></div>';
   }
 
   function field(name, label, value, opts){
@@ -763,15 +822,53 @@
 
   function setToolbarEditing(on){
     editing = !!on;
-    document.getElementById('editBtn').hidden = on || drawerMode === 'servo';
+    document.getElementById('editBtn').hidden = on;
     document.getElementById('deleteBtn').hidden = on;
-    document.getElementById('printBtn').hidden = on || drawerMode === 'servo';
+    document.getElementById('printBtn').hidden = on;
     document.getElementById('saveNotesBtn').hidden = on;
     document.getElementById('dStatus').disabled = on;
     document.getElementById('dDecuria').disabled = on || drawerMode === 'servo';
     document.getElementById('dDecuria').hidden = drawerMode === 'servo';
+    document.getElementById('dEquipe').hidden = drawerMode !== 'servo';
+    document.getElementById('dEquipe').disabled = on || drawerMode !== 'servo';
     document.getElementById('dNotes').disabled = on;
   }
+
+  function fillEquipeSelect(current){
+    const sel = document.getElementById('dEquipe');
+    if(!sel) return;
+    const cur = current || '';
+    sel.innerHTML =
+      '<option value="">Sem equipe</option>' +
+      SERVO_EQUIPES.filter(e => e !== 'Outro').map(e =>
+        '<option value="'+esc(e)+'">'+esc(e)+'</option>'
+      ).join('') +
+      (cur && !SERVO_EQUIPES.includes(cur)
+        ? '<option value="'+esc(cur)+'">'+esc(cur)+'</option>'
+        : '') +
+      '<option value="__outro__">Outra…</option>';
+    sel.value = [...sel.options].some(o => o.value === cur) ? cur : '';
+  }
+
+  const SERVO_EQUIPES = [
+    'Coordenação',
+    'Base',
+    'Capela',
+    'Cozinha',
+    'Limpeza',
+    'Secretaria',
+    'Tesouraria',
+    'Decúria',
+    'Música',
+    'Equipe de sala',
+    'Reitor',
+    'Bem-estar',
+    'Ligação',
+    'Sineteiro',
+    'Cronometrista',
+    'Externa',
+    'Outro'
+  ];
 
   function fillServoEquipeFilter(){
     const sel = document.getElementById('servoFilterEquipe');
@@ -786,10 +883,12 @@
   function filteredServos(){
     const q = (document.getElementById('servoSearch').value || '').trim().toLowerCase();
     const eq = document.getElementById('servoFilterEquipe').value;
+    const camisa = document.getElementById('servoFilterCamisa').value;
     const sort = document.getElementById('servoFilterSort').value;
     let list = servoRows.slice();
     if(servoStatusFilter) list = list.filter(r => (r.status || 'nova') === servoStatusFilter);
     if(eq) list = list.filter(r => r.equipe === eq);
+    if(camisa) list = list.filter(r => r.camisa === camisa);
     if(q){
       list = list.filter(r => {
         const blob = [r.nome, r.telefone, r.equipe, r.ano_cor_jovem, r.endereco].join(' ').toLowerCase();
@@ -823,7 +922,7 @@
         '<td><span class="pill pill-'+esc(st)+'">'+esc(STATUS_LABEL[st]||st)+'</span></td>' +
         '<td><strong>'+esc(r.nome||'—')+'</strong></td>' +
         '<td>'+esc(r.idade != null ? r.idade : '—')+'</td>' +
-        '<td>'+esc(r.equipe||'—')+'</td>' +
+        '<td>'+esc(r.equipe || 'A definir')+'</td>' +
         '<td>'+esc(r.telefone||'—')+'</td>' +
         '<td>'+esc(camisa)+'</td>' +
         '<td>'+esc(r.ano_cor_jovem||'—')+'</td>' +
@@ -832,8 +931,10 @@
     }).join('');
 
     empty.hidden = list.length > 0;
+    const quer = list.filter(r => r.camisa === 'sim').length;
     document.getElementById('servoStatusText').textContent =
-      list.length + ' de ' + total + ' servo(s)';
+      list.length + ' de ' + total + ' servo(s)' +
+      (quer ? ' · ' + quer + ' quer(em) camisa' : '');
   }
 
   function fillServoDrawer(r){
@@ -851,8 +952,13 @@
 
     document.getElementById('dStatus').value = r.status || 'nova';
     document.getElementById('dNotes').value = r.observacoes || '';
-    setToolbarEditing(false);
+    fillEquipeSelect(r.equipe);
 
+    if(editing) fillServoDrawerEdit(r);
+    else fillServoDrawerView(r);
+  }
+
+  function fillServoDrawerView(r){
     const foto = r.foto_url
       ? '<div class="sec"><h3>Foto</h3><p><a href="'+esc(r.foto_url)+'" target="_blank" rel="noopener"><img src="'+esc(r.foto_url)+'" alt="Foto" style="max-width:100%;border-radius:6px;border:1px solid var(--mist)"></a></p></div>'
       : '';
@@ -866,7 +972,7 @@
         item('Endereço', r.endereco, true) +
       '</div></div>' +
       '<div class="sec"><h3>Serviço</h3><div class="grid">' +
-        item('Equipe', r.equipe) +
+        item('Equipe', r.equipe || 'A definir pela organização') +
         item('Ano COR Jovem', r.ano_cor_jovem) +
         item('Quer camisa', simNao(r.camisa)) +
         item('Tamanho', r.tamanho_camisa) +
@@ -879,10 +985,128 @@
       foto;
   }
 
+  function fillServoDrawerEdit(r){
+    const nasc = r.nascimento ? String(r.nascimento).slice(0,10) : '';
+    const sac = Array.isArray(r.sacramentos) ? r.sacramentos.join(', ') : (r.sacramentos || '');
+    const equipes = SERVO_EQUIPES.slice();
+    if(r.equipe && !equipes.includes(r.equipe)) equipes.splice(equipes.length - 1, 0, r.equipe);
+
+    document.getElementById('drawerBody').innerHTML =
+      '<div class="sec"><h3>Editar servo</h3><div class="grid">' +
+        field('nome','Nome completo', r.nome, { full:true }) +
+        field('nascimento','Nascimento', nasc, { type:'date' }) +
+        field('idade','Idade', r.idade, { type:'number', min:12, max:99 }) +
+        field('telefone','Telefone', r.telefone) +
+        field('endereco','Endereço', r.endereco, { type:'textarea', full:true }) +
+      '</div></div>' +
+      '<div class="sec"><h3>Serviço</h3><div class="grid">' +
+        field('equipe','Equipe', r.equipe, {
+          type:'select',
+          options:[{value:'',label:'—'}].concat(equipes.map(e=>({value:e,label:e})))
+        }) +
+        field('ano_cor_jovem','Ano COR Jovem', r.ano_cor_jovem) +
+        yesNoSelect('camisa','Quer camisa', r.camisa) +
+        field('tamanho_camisa','Tamanho', r.tamanho_camisa, {
+          type:'select',
+          options:[{value:'',label:'—'},'PP','P','M','G','GG','XG','XXG']
+        }) +
+      '</div></div>' +
+      '<div class="sec"><h3>Fé</h3><div class="grid">' +
+        field('marco_cor','O que mais marcou', r.marco_cor, { type:'textarea', full:true }) +
+        field('oracao_sacramentos','Oração e sacramentos', r.oracao_sacramentos, { type:'textarea', full:true }) +
+        field('sacramentos','Sacramentos (separados por vírgula)', sac, { full:true }) +
+      '</div></div>' +
+      '<div class="edit-actions">' +
+        '<button class="btn btn-primary" type="button" id="saveEditBtn">Salvar alterações</button>' +
+        '<button class="btn btn-ghost" type="button" id="cancelEditBtn">Cancelar</button>' +
+      '</div>';
+
+    const nascEl = document.getElementById('ef-nascimento');
+    const idadeEl = document.getElementById('ef-idade');
+    if(nascEl && idadeEl){
+      nascEl.addEventListener('change', ()=>{
+        const age = calcAge(nascEl.value);
+        if(age != null) idadeEl.value = age;
+      });
+    }
+
+    document.getElementById('saveEditBtn').addEventListener('click', saveServoEdit);
+    document.getElementById('cancelEditBtn').addEventListener('click', ()=>{
+      const cur = servoRows.find(x => x.id === selectedServoId);
+      setToolbarEditing(false);
+      if(cur) fillServoDrawer(cur);
+    });
+  }
+
+  async function saveServoEdit(){
+    if(!selectedServoId) return;
+    const nasc = g('nascimento');
+    let idade = parseInt(g('idade'), 10);
+    const ageCalc = calcAge(nasc);
+    if(ageCalc != null) idade = ageCalc;
+
+    const nome = g('nome');
+    const telefone = g('telefone');
+    const endereco = g('endereco');
+    const equipe = g('equipe');
+    const ano_cor_jovem = g('ano_cor_jovem');
+    const marco_cor = g('marco_cor');
+    const oracao_sacramentos = g('oracao_sacramentos');
+
+    if(!nome || !nasc || !telefone || !endereco || !ano_cor_jovem || !marco_cor || !oracao_sacramentos){
+      toast('Preencha os campos obrigatórios');
+      return;
+    }
+
+    const sacRaw = g('sacramentos');
+    const sacramentos = sacRaw
+      ? sacRaw.split(',').map(s=>s.trim()).filter(Boolean)
+      : [];
+
+    const camisa = g('camisa') || null;
+    const patch = {
+      nome,
+      nascimento: nasc,
+      idade: idade || null,
+      telefone,
+      endereco,
+      equipe: equipe || '',
+      ano_cor_jovem,
+      marco_cor,
+      oracao_sacramentos,
+      sacramentos,
+      camisa,
+      tamanho_camisa: camisa === 'sim' ? (g('tamanho_camisa') || null) : null
+    };
+
+    const btn = document.getElementById('saveEditBtn');
+    if(btn){ btn.disabled = true; btn.textContent = 'Salvando…'; }
+
+    try{
+      const updated = await window.COR_API.updateServo(selectedServoId, patch);
+      const row = Array.isArray(updated) && updated[0]
+        ? updated[0]
+        : Object.assign({}, servoRows.find(x=>x.id===selectedServoId), patch);
+      const idx = servoRows.findIndex(x => x.id === selectedServoId);
+      if(idx >= 0) servoRows[idx] = row;
+      fillServoEquipeFilter();
+      setToolbarEditing(false);
+      fillServoDrawer(row);
+      renderServos();
+      renderShirts();
+      toast('Ficha do servo atualizada');
+    }catch(err){
+      console.error(err);
+      toast('Erro ao salvar alterações do servo');
+      if(btn){ btn.disabled = false; btn.textContent = 'Salvar alterações'; }
+    }
+  }
+
   function openServoDetail(r){
     drawerMode = 'servo';
     selectedId = null;
     selectedServoId = r.id;
+    setToolbarEditing(false);
     fillServoDrawer(r);
     renderServos();
     overlay.classList.add('open');
@@ -906,7 +1130,7 @@
       '<div class="sec"><h3>Responsável</h3><div class="grid">' +
         item('Menor de idade', r.menor_idade ? 'Sim' : 'Não') +
         item('Nome', r.responsavel_nome, true) +
-        item('Telefone', r.responsavel_telefone) +
+        itemPhone('Telefone do responsável', r.responsavel_telefone, true) +
         item('CPF', r.responsavel_cpf) +
       '</div></div>' +
 
@@ -925,7 +1149,7 @@
         item('Alergia', r.alergia==='sim' ? ('Sim — ' + (r.alergia_qual||'')) : simNao(r.alergia), true) +
         item('Urgência — nome', r.urgencia_nome) +
         item('Parentesco', r.urgencia_parentesco) +
-        item('Urgência — telefone', r.urgencia_telefone) +
+        itemPhone('Urgência — telefone', r.urgencia_telefone, true) +
       '</div></div>' +
 
       '<div class="sec"><h3>Sobre o retiro</h3><div class="grid">' +
@@ -997,7 +1221,7 @@
           type:'select',
           options:[
             {value:'',label:'—'},
-            'PP','P','M','G','GG','XG'
+            'PP','P','M','G','GG','XG','XXG'
           ]
         }) +
       '</div></div>' +
@@ -1138,6 +1362,7 @@
     selectedId = r.id;
     setToolbarEditing(false);
     document.getElementById('dDecuria').hidden = false;
+    document.getElementById('dEquipe').hidden = true;
     fillDrawer(r);
     render();
     overlay.classList.add('open');
@@ -1155,6 +1380,7 @@
     selectedServoId = null;
     drawerMode = 'inscricao';
     document.getElementById('dDecuria').hidden = false;
+    document.getElementById('dEquipe').hidden = true;
     render();
     renderServos();
   }
@@ -1164,6 +1390,13 @@
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDetail(); });
 
   document.getElementById('editBtn').addEventListener('click', ()=>{
+    if(drawerMode === 'servo'){
+      const r = servoRows.find(x => x.id === selectedServoId);
+      if(!r) return;
+      setToolbarEditing(true);
+      fillServoDrawerEdit(r);
+      return;
+    }
     if(drawerMode !== 'inscricao') return;
     const r = rows.find(x => x.id === selectedId);
     if(!r) return;
@@ -1268,6 +1501,34 @@
     }catch(err){
       console.error(err);
       toast('Erro ao atualizar Decúria. Rode o SQL atualizado.');
+      load(true);
+    }
+  });
+
+  document.getElementById('dEquipe').addEventListener('change', async (e)=>{
+    if(drawerMode !== 'servo' || !selectedServoId || editing) return;
+    let equipe = e.target.value || null;
+    if(equipe === '__outro__'){
+      const custom = prompt('Nome da equipe:');
+      if(!custom || !custom.trim()){
+        const cur = servoRows.find(x => x.id === selectedServoId);
+        fillEquipeSelect(cur && cur.equipe);
+        return;
+      }
+      equipe = custom.trim();
+    }
+    try{
+      await window.COR_API.updateServo(selectedServoId, { equipe: equipe || '' });
+      const r = servoRows.find(x => x.id === selectedServoId);
+      if(r) r.equipe = equipe || '';
+      fillEquipeSelect(equipe || '');
+      fillServoEquipeFilter();
+      renderServos();
+      if(r && !editing) fillServoDrawer(r);
+      toast(equipe ? 'Equipe: ' + equipe : 'Equipe removida');
+    }catch(err){
+      console.error(err);
+      toast('Não foi possível salvar a equipe.');
       load(true);
     }
   });
@@ -1383,7 +1644,7 @@
     const st = document.getElementById('shirtStatus').value;
     const size = document.getElementById('shirtSize').value;
     const sort = document.getElementById('shirtSort').value;
-    const order = ['PP','P','M','G','GG','XG'];
+    const order = ['PP','P','M','G','GG','XG','XXG'];
     const tipo = shirtTipo();
     const isServo = tipo === 'servos';
 
@@ -1435,7 +1696,7 @@
     if(groupHead) groupHead.textContent = isServo ? 'Equipe' : 'Decúria';
 
     const list = shirtList();
-    const sizes = ['PP','P','M','G','GG','XG'];
+    const sizes = ['PP','P','M','G','GG','XG','XXG'];
     const counts = {};
     sizes.forEach(s => counts[s] = 0);
     let sem = 0;
@@ -1517,7 +1778,9 @@
   let exportSource = 'inscricoes';
 
   function currentExportList(){
-    return exportSource === 'camisas' ? shirtList() : filtered();
+    if(exportSource === 'camisas') return shirtList();
+    if(exportSource === 'servos') return filteredServos();
+    return filtered();
   }
 
   function filterSummaryText(){
@@ -1531,8 +1794,18 @@
       else if(size) bits.push('Tam. '+size);
       const q = (document.getElementById('shirtSearch').value || '').trim();
       if(q) bits.push('Busca: '+q);
+    }else if(exportSource === 'servos'){
+      bits.push('Servos');
+      if(servoStatusFilter) bits.push(STATUS_LABEL[servoStatusFilter] || servoStatusFilter);
+      const camisa = document.getElementById('servoFilterCamisa').value;
+      const eq = document.getElementById('servoFilterEquipe').value;
+      if(camisa === 'sim') bits.push('Quer camisa');
+      if(camisa === 'nao') bits.push('Sem camisa');
+      if(eq) bits.push(eq);
+      const q = (document.getElementById('servoSearch').value || '').trim();
+      if(q) bits.push('Busca: '+q);
     }else{
-      bits.push('Inscrições');
+      bits.push('Cursistas');
       if(statusFilter) bits.push(STATUS_LABEL[statusFilter] || statusFilter);
       if(quickFilter === 'menor') bits.push('Menores');
       if(quickFilter === 'saude') bits.push('Alerta saúde');
@@ -1561,25 +1834,43 @@
     return EXPORT_FIELDS.filter(f => ids.includes(f.id));
   }
 
+  let exportScrollY = 0;
+
   function openExportModal(source){
     if(source) exportSource = source;
     else {
       const view = ((document.querySelector('.tab.active') || {}).dataset || {}).view;
-      exportSource = view === 'camisas' ? 'camisas' : 'inscricoes';
+      if(view === 'camisas') exportSource = 'camisas';
+      else if(view === 'servos') exportSource = 'servos';
+      else exportSource = 'inscricoes';
     }
     const list = currentExportList();
     const title = document.getElementById('exportTitle');
     const sub = document.getElementById('exportSubtitle');
-    title.value = exportSource === 'camisas'
-      ? (shirtTipo() === 'servos'
+    if(exportSource === 'camisas'){
+      title.value = shirtTipo() === 'servos'
         ? 'XVI C.O.R Jovem — Camisas dos servos'
-        : 'XVI C.O.R Jovem — Camisas dos cursistas')
-      : 'XVI C.O.R Jovem — Inscrições';
+        : 'XVI C.O.R Jovem — Camisas dos cursistas';
+    }else if(exportSource === 'servos'){
+      title.value = 'XVI C.O.R Jovem — Servos';
+    }else{
+      title.value = 'XVI C.O.R Jovem — Cursistas';
+    }
     sub.value = filterSummaryText();
     document.getElementById('exportHint').textContent =
       list.length + ' registro(s) no filtro atual · personalize colunas e baixe Excel ou PDF';
-    renderExportCols(exportSource === 'camisas' ? PRESETS.camisas : PRESETS.essencial);
+    const preset = exportSource === 'camisas' ? 'camisas' : 'essencial';
+    renderExportCols(PRESETS[preset] || PRESETS.essencial);
+    const presetSelect = document.getElementById('exportPresetSelect');
+    if(presetSelect) presetSelect.value = preset;
     document.getElementById('exportCheckCol').checked = exportSource === 'camisas';
+
+    exportScrollY = window.scrollY || window.pageYOffset || 0;
+    document.documentElement.scrollLeft = 0;
+    document.body.scrollLeft = 0;
+    document.body.classList.add('export-lock');
+    document.body.style.top = '-' + exportScrollY + 'px';
+
     document.getElementById('exportOverlay').classList.add('open');
     document.getElementById('exportOverlay').setAttribute('aria-hidden','false');
   }
@@ -1587,10 +1878,13 @@
   function closeExportModal(){
     document.getElementById('exportOverlay').classList.remove('open');
     document.getElementById('exportOverlay').setAttribute('aria-hidden','true');
+    document.body.classList.remove('export-lock');
+    document.body.style.top = '';
+    window.scrollTo(0, exportScrollY);
   }
 
   function shirtSizeSummary(list){
-    const sizes = ['PP','P','M','G','GG','XG'];
+    const sizes = ['PP','P','M','G','GG','XG','XXG'];
     const counts = {};
     sizes.forEach(s => counts[s] = 0);
     let sem = 0, quer = 0;
@@ -1833,6 +2127,7 @@
     if(e.target.id === 'exportOverlay') closeExportModal();
   });
   document.getElementById('exportCloseBtn').addEventListener('click', closeExportModal);
+  document.getElementById('exportCloseX').addEventListener('click', closeExportModal);
   document.addEventListener('keydown', (e)=>{
     if(e.key === 'Escape' && document.getElementById('exportOverlay').classList.contains('open')) closeExportModal();
   });
@@ -1843,7 +2138,13 @@
     btn.addEventListener('click', ()=>{
       const key = btn.getAttribute('data-preset');
       renderExportCols(PRESETS[key] || []);
+      const presetSelect = document.getElementById('exportPresetSelect');
+      if(presetSelect) presetSelect.value = key;
     });
+  });
+  document.getElementById('exportPresetSelect').addEventListener('change', (e)=>{
+    const key = e.target.value;
+    renderExportCols(PRESETS[key] || []);
   });
 
   document.getElementById('shirtExportBtn').addEventListener('click', ()=>{
@@ -1913,41 +2214,157 @@
     }
   });
 
+  function runBrowserPrint(){
+    // dá um frame pro DOM gravar o #printSheet antes do diálogo
+    requestAnimationFrame(()=>{
+      setTimeout(()=> window.print(), 50);
+    });
+  }
+
+  function fichaPrintStyles(){
+    return '<style>' +
+      '.ficha{font-family:Georgia,"Times New Roman",serif;color:#152029;line-height:1.35;}' +
+      '.ficha *{box-sizing:border-box;}' +
+      '.ficha-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:2.5px solid #152029;margin-bottom:18px;}' +
+      '.ficha-brand{display:flex;align-items:center;gap:12px;min-width:0;}' +
+      '.ficha-brand img{width:52px;height:52px;object-fit:contain;}' +
+      '.ficha-brand .t{font-family:"Segoe UI",system-ui,sans-serif;}' +
+      '.ficha-brand .t strong{display:block;font-size:15px;letter-spacing:.04em;text-transform:uppercase;}' +
+      '.ficha-brand .t span{display:block;font-size:11px;color:#4d5c68;margin-top:2px;font-weight:600;}' +
+      '.ficha-badge{text-align:right;font-family:"Segoe UI",system-ui,sans-serif;}' +
+      '.ficha-badge .kind{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#c45c26;border:1.5px solid #c45c26;padding:4px 9px;border-radius:4px;}' +
+      '.ficha-badge .proto{display:block;margin-top:8px;font-size:11px;font-weight:700;color:#4d5c68;font-variant-numeric:tabular-nums;}' +
+      '.ficha-name{font-family:"Segoe UI",system-ui,sans-serif;font-size:26px;font-weight:800;margin:0 0 6px;letter-spacing:-.02em;line-height:1.15;}' +
+      '.ficha-meta{font-family:"Segoe UI",system-ui,sans-serif;display:flex;flex-wrap:wrap;gap:6px;margin:0 0 20px;}' +
+      '.ficha-meta i{font-style:normal;font-size:11px;font-weight:700;background:#eef3f7;color:#152029;padding:5px 10px;border-radius:999px;}' +
+      '.ficha-meta i.ok{background:#e6f4ea;color:#1e6b3a;}' +
+      '.ficha-meta i.warn{background:#f8ebe4;color:#9c4a3a;}' +
+      '.ficha-sec{margin:0 0 16px;page-break-inside:avoid;}' +
+      '.ficha-sec h2{font-family:"Segoe UI",system-ui,sans-serif;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#c45c26;margin:0 0 8px;padding:0 0 6px;border-bottom:1px solid #d4dde5;}' +
+      '.ficha-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #d4dde5;border-radius:6px;overflow:hidden;}' +
+      '.ficha-grid .cell{padding:9px 12px;border-bottom:1px solid #e8eef3;border-right:1px solid #e8eef3;font-family:"Segoe UI",system-ui,sans-serif;}' +
+      '.ficha-grid .cell:nth-child(2n){border-right:none;}' +
+      '.ficha-grid .cell:nth-last-child(-n+2){border-bottom:none;}' +
+      '.ficha-grid .cell.full{grid-column:1 / -1;border-right:none;}' +
+      '.ficha-grid .cell .l{display:block;font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6b7a86;margin-bottom:3px;}' +
+      '.ficha-grid .cell .v{display:block;font-size:13px;font-weight:600;color:#152029;word-break:break-word;}' +
+      '.ficha-grid .cell .v.empty{color:#9aa6b0;font-weight:500;}' +
+      '.ficha-foot{margin-top:22px;padding-top:10px;border-top:1px solid #d4dde5;font-family:"Segoe UI",system-ui,sans-serif;font-size:10px;color:#6b7a86;display:flex;justify-content:space-between;gap:12px;}' +
+      '@media print{.ficha-grid{border-color:#bbb;}.ficha-sec h2{border-color:#bbb;}}' +
+    '</style>';
+  }
+
+  function fichaCell(label, value, full){
+    const empty = val(value) == null;
+    const text = empty ? '—' : (Array.isArray(value) ? value.join(', ') : value);
+    return '<div class="cell'+(full?' full':'')+'"><span class="l">'+esc(label)+'</span><span class="v'+(empty?' empty':'')+'">'+esc(text)+'</span></div>';
+  }
+
+  function buildFichaPrint(kind, r){
+    const isServo = kind === 'servo';
+    const st = STATUS_LABEL[r.status||'nova'] || r.status;
+    const stClass = (r.status==='confirmada') ? 'ok' : ((r.status==='cancelada'||r.status==='lista_espera') ? 'warn' : '');
+    let body = '';
+
+    if(isServo){
+      body =
+        '<section class="ficha-sec"><h2>Dados</h2><div class="ficha-grid">' +
+          fichaCell('Nome completo', r.nome, true) +
+          fichaCell('Nascimento', fmtDay(r.nascimento)) +
+          fichaCell('Idade', r.idade) +
+          fichaCell('Telefone', r.telefone) +
+          fichaCell('Endereço', r.endereco, true) +
+        '</div></section>' +
+        '<section class="ficha-sec"><h2>Serviço</h2><div class="ficha-grid">' +
+          fichaCell('Equipe', r.equipe) +
+          fichaCell('Ano COR Jovem', r.ano_cor_jovem) +
+          fichaCell('Quer camisa', simNao(r.camisa)) +
+          fichaCell('Tamanho', r.tamanho_camisa || '—') +
+        '</div></section>' +
+        '<section class="ficha-sec"><h2>Fé</h2><div class="ficha-grid">' +
+          fichaCell('O que mais marcou', r.marco_cor, true) +
+          fichaCell('Oração e sacramentos', r.oracao_sacramentos, true) +
+          fichaCell('Sacramentos', r.sacramentos, true) +
+        '</div></section>' +
+        '<section class="ficha-sec"><h2>Observações da equipe</h2><div class="ficha-grid">' +
+          fichaCell('Notas', r.observacoes, true) +
+        '</div></section>';
+    }else{
+      body =
+        '<section class="ficha-sec"><h2>Dados</h2><div class="ficha-grid">' +
+          fichaCell('Nome completo', r.nome, true) +
+          fichaCell('Nascimento', fmtDay(r.nascimento)) +
+          fichaCell('Idade', r.idade) +
+          fichaCell('WhatsApp', r.whatsapp) +
+          fichaCell('Cidade / UF', (r.cidade||'') + (r.uf ? ' / '+r.uf : '')) +
+          fichaCell('Bairro', r.bairro) +
+          fichaCell('Endereço', r.endereco, true) +
+        '</div></section>' +
+        (r.menor_idade ? (
+          '<section class="ficha-sec"><h2>Responsável</h2><div class="ficha-grid">' +
+            fichaCell('Nome', r.responsavel_nome, true) +
+            fichaCell('Telefone', r.responsavel_telefone) +
+            fichaCell('CPF', r.responsavel_cpf) +
+          '</div></section>'
+        ) : '') +
+        '<section class="ficha-sec"><h2>Saúde</h2><div class="ficha-grid">' +
+          fichaCell('Comorbidade', r.comorbidade==='sim'?(r.comorbidade_qual||'Sim'):simNao(r.comorbidade), true) +
+          fichaCell('Medicamento', r.medicamento==='sim'?(r.medicamento_qual||'Sim'):simNao(r.medicamento), true) +
+          fichaCell('Alergia', r.alergia==='sim'?(r.alergia_qual||'Sim'):simNao(r.alergia), true) +
+          fichaCell('Urgência', [r.urgencia_nome, r.urgencia_parentesco ? '('+r.urgencia_parentesco+')' : '', r.urgencia_telefone].filter(Boolean).join(' · '), true) +
+        '</div></section>' +
+        '<section class="ficha-sec"><h2>Retiro</h2><div class="ficha-grid">' +
+          fichaCell('Decúria', decuriaName(r.decuria_id) || '—') +
+          fichaCell('Camisa', r.camisa==='sim'?('Sim · '+(r.tamanho_camisa||'')):simNao(r.camisa)) +
+          fichaCell('Sacramentos', r.sacramentos, true) +
+          fichaCell('Expectativa', r.expectativa, true) +
+          fichaCell('Obs. equipe', r.observacoes, true) +
+        '</div></section>';
+    }
+
+    return fichaPrintStyles() +
+      '<article class="ficha">' +
+        '<header class="ficha-top">' +
+          '<div class="ficha-brand">' +
+            '<img src="image/logo-1.png" alt="">' +
+            '<div class="t"><strong>XVI C.O.R Jovem</strong><span>Paróquia Santo Antônio — Bacaxá</span></div>' +
+          '</div>' +
+          '<div class="ficha-badge">' +
+            '<span class="kind">'+(isServo ? 'Ficha de servo' : 'Ficha de cursista')+'</span>' +
+            '<span class="proto">Protocolo '+esc(protocol(r.id))+'</span>' +
+          '</div>' +
+        '</header>' +
+        '<h1 class="ficha-name">'+esc(r.nome || '—')+'</h1>' +
+        '<div class="ficha-meta">' +
+          '<i class="'+stClass+'">'+esc(st)+'</i>' +
+          '<i>'+esc(fmtDate(r.created_at))+'</i>' +
+          (isServo && r.equipe ? '<i>'+esc(r.equipe)+'</i>' : '') +
+          (!isServo && r.decuria_id ? '<i>'+esc(decuriaName(r.decuria_id))+'</i>' : '') +
+          (!isServo && r.menor_idade ? '<i class="warn">Menor de idade</i>' : '') +
+        '</div>' +
+        body +
+        '<footer class="ficha-foot">' +
+          '<span>Documento interno da equipe · XVI C.O.R Jovem</span>' +
+          '<span>Gerado em '+esc(new Date().toLocaleString('pt-BR'))+'</span>' +
+        '</footer>' +
+      '</article>';
+  }
+
   document.getElementById('printBtn').addEventListener('click', ()=>{
-    const r = rows.find(x => x.id === selectedId);
-    if(!r) return;
     const sheet = document.getElementById('printSheet');
-    const line = (l,v) => '<tr><td style="padding:4px 8px 4px 0;color:#666;width:38%">'+esc(l)+'</td><td style="padding:4px 0;font-weight:600">'+(val(v)!=null?esc(Array.isArray(v)?v.join(', '):v):'—')+'</td></tr>';
-    sheet.innerHTML =
-      '<h1 style="margin:0 0 4px;font-size:22px">XVI C.O.R Jovem — Ficha</h1>' +
-      '<p style="margin:0 0 16px;color:#555">Protocolo '+esc(protocol(r.id))+' · '+esc(fmtDate(r.created_at))+' · Status: '+esc(STATUS_LABEL[r.status||'nova'])+'</p>' +
-      '<h2 style="font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px">Dados</h2>' +
-      '<table style="width:100%;font-size:13px;margin-bottom:14px">' +
-        line('Nome', r.nome)+line('Nascimento', fmtDay(r.nascimento))+line('Idade', r.idade)+
-        line('WhatsApp', r.whatsapp)+line('Endereço', r.endereco)+
-        line('Bairro', r.bairro)+line('Cidade/UF', (r.cidade||'')+'/'+(r.uf||''))+
-      '</table>' +
-      (r.menor_idade ? (
-        '<h2 style="font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px">Responsável</h2>' +
-        '<table style="width:100%;font-size:13px;margin-bottom:14px">' +
-          line('Nome', r.responsavel_nome)+line('Telefone', r.responsavel_telefone)+line('CPF', r.responsavel_cpf)+
-        '</table>'
-      ) : '') +
-      '<h2 style="font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px">Saúde</h2>' +
-      '<table style="width:100%;font-size:13px;margin-bottom:14px">' +
-        line('Comorbidade', r.comorbidade==='sim'?(r.comorbidade_qual||'Sim'):simNao(r.comorbidade))+
-        line('Medicamento', r.medicamento==='sim'?(r.medicamento_qual||'Sim'):simNao(r.medicamento))+
-        line('Alergia', r.alergia==='sim'?(r.alergia_qual||'Sim'):simNao(r.alergia))+
-        line('Urgência', (r.urgencia_nome||'')+' ('+(r.urgencia_parentesco||'—')+') — '+(r.urgencia_telefone||''))+
-      '</table>' +
-      '<h2 style="font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px">Retiro</h2>' +
-      '<table style="width:100%;font-size:13px">' +
-        line('Camisa', r.camisa==='sim'?('Sim · '+ (r.tamanho_camisa||'')):simNao(r.camisa))+
-        line('Sacramentos', r.sacramentos)+
-        line('Expectativa', r.expectativa)+
-        line('Obs. equipe', r.observacoes)+
-      '</table>';
-    window.print();
+
+    if(drawerMode === 'servo'){
+      const r = servoRows.find(x => x.id === selectedServoId);
+      if(!r){ toast('Abra a ficha do servo para imprimir'); return; }
+      sheet.innerHTML = buildFichaPrint('servo', r);
+      runBrowserPrint();
+      return;
+    }
+
+    const r = rows.find(x => x.id === selectedId);
+    if(!r){ toast('Abra a ficha do cursista para imprimir'); return; }
+    sheet.innerHTML = buildFichaPrint('cursista', r);
+    runBrowserPrint();
   });
 
   document.querySelectorAll('#stats .stat').forEach(el=>{
@@ -1978,6 +2395,7 @@
     if(r) openServoDetail(r);
   });
   document.getElementById('servoSearch').addEventListener('input', renderServos);
+  document.getElementById('servoFilterCamisa').addEventListener('change', renderServos);
   document.getElementById('servoFilterEquipe').addEventListener('change', renderServos);
   document.getElementById('servoFilterSort').addEventListener('change', renderServos);
   document.querySelectorAll('#servoStats .stat').forEach(el=>{

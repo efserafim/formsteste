@@ -82,7 +82,7 @@
   <div class="board">
     <div class="board-head">
       <h2>Ficha do servo</h2>
-      <p>Três passos para servir no XVI C.O.R Jovem. Esta inscrição é separada da ficha dos cursistas.</p>
+      <p>Três passos para se candidatar a servir no XVI C.O.R Jovem. Esta ficha é só para a equipe de serviço — cursistas usam a inscrição própria.</p>
     </div>
 
     <form id="servoForm" novalidate>
@@ -132,7 +132,7 @@
 
       <section class="step" data-step="1" aria-labelledby="step2-title">
         <h2 class="sr-only" id="step2-title">Serviço e camisa</h2>
-        <p class="section-lead">Conte em qual equipe deseja servir e se quer camisa.</p>
+        <p class="section-lead">Informe se quer camisa e em que ano viveu o COR Jovem. A equipe de serviço é definida depois pela organização.</p>
 
         <div class="field">
           <span class="lbl">Vai querer camisa? <span class="req">*</span></span>
@@ -148,31 +148,9 @@
           <select class="ctrl" id="tamanho">
             <option value="">Selecione…</option>
             <option>PP</option><option>P</option><option>M</option>
-            <option>G</option><option>GG</option><option>XG</option>
+            <option>G</option><option>GG</option><option>XG</option><option>XXG</option>
           </select>
           <p class="field-error" data-for="tamanho">Selecione o tamanho.</p>
-        </div>
-
-        <div class="field">
-          <label class="lbl" for="equipe">Qual equipe servirá? <span class="req">*</span></label>
-          <select class="ctrl" id="equipe" required>
-            <option value="">Selecione…</option>
-            <option>Cozinha</option>
-            <option>Liturgia</option>
-            <option>Música</option>
-            <option>Acolhida</option>
-            <option>Estrutura / Logística</option>
-            <option>Comunicação / Mídia</option>
-            <option>Enfermaria</option>
-            <option>Coordenação</option>
-            <option>Outro</option>
-          </select>
-          <p class="field-error" data-for="equipe">Informe a equipe.</p>
-        </div>
-        <div class="field" id="equipeOutroWrap" hidden>
-          <label class="lbl" for="equipeOutro">Qual equipe? <span class="req">*</span></label>
-          <input class="ctrl" type="text" id="equipeOutro" placeholder="Descreva a equipe">
-          <p class="field-error" data-for="equipeOutro">Informe a equipe.</p>
         </div>
 
         <div class="field">
@@ -183,8 +161,8 @@
       </section>
 
       <section class="step" data-step="2" aria-labelledby="step3-title">
-        <h2 class="sr-only" id="step3-title">Fé e foto</h2>
-        <p class="section-lead">Conte um pouco da sua caminhada e, se quiser, envie uma foto.</p>
+        <h2 class="sr-only" id="step3-title">Fé</h2>
+        <p class="section-lead">Conte um pouco da sua caminhada de fé.</p>
 
         <div class="field">
           <label class="lbl" for="marcoCor">O que mais te marcou no COR Jovem quando vivenciou? <span class="req">*</span></label>
@@ -204,17 +182,9 @@
             <label class="chk"><input type="checkbox" value="Batismo">Batismo</label>
             <label class="chk"><input type="checkbox" value="Primeira Eucaristia">Primeira Eucaristia</label>
             <label class="chk"><input type="checkbox" value="Crisma">Crisma</label>
-            <label class="chk"><input type="checkbox" value="Outro" id="sacOutroCheck">Outro</label>
+            <label class="chk"><input type="checkbox" value="Matrimônio">Matrimônio</label>
           </div>
-          <input class="ctrl" type="text" id="sacOutro" placeholder="Qual outro sacramento?" hidden style="margin-top:8px">
           <p class="field-error" data-for="sacramentos">Selecione ao menos um sacramento.</p>
-        </div>
-
-        <div class="field">
-          <label class="lbl" for="foto">Envie uma foto que destaque seu rosto <span class="opt">(opcional)</span></label>
-          <input class="ctrl" type="file" id="foto" accept="image/*">
-          <p class="hint">JPG ou PNG · até cerca de 5 MB</p>
-          <p id="fotoName" class="hint" hidden></p>
         </div>
 
         <div class="consent">
@@ -255,7 +225,7 @@
   const STEPS = [
     { label: 'Seus dados' },
     { label: 'Serviço e camisa' },
-    { label: 'Fé e foto' }
+    { label: 'Fé' }
   ];
   const DRAFT_KEY = 'cor_servo_draft_v1';
 
@@ -308,29 +278,6 @@
     });
   });
 
-  document.getElementById('equipe').addEventListener('change', ()=>{
-    const outro = document.getElementById('equipe').value === 'Outro';
-    document.getElementById('equipeOutroWrap').hidden = !outro;
-    if(!outro) document.getElementById('equipeOutro').value = '';
-  });
-
-  document.getElementById('sacOutroCheck').addEventListener('change', (e)=>{
-    document.getElementById('sacOutro').hidden = !e.target.checked;
-    if(!e.target.checked) document.getElementById('sacOutro').value = '';
-  });
-
-  document.getElementById('foto').addEventListener('change', (e)=>{
-    const f = e.target.files && e.target.files[0];
-    const el = document.getElementById('fotoName');
-    if(f){
-      el.hidden = false;
-      el.textContent = 'Arquivo: ' + f.name;
-    }else{
-      el.hidden = true;
-      el.textContent = '';
-    }
-  });
-
   function saveDraft(){
     try{
       const draft = { step: current, fields: {}, radios: {}, checks: [] };
@@ -367,8 +314,6 @@
       if(typeof draft.step === 'number') current = draft.step;
       const a = calcAge(nascimento.value);
       if(a != null) idade.value = a;
-      const eq = document.getElementById('equipe');
-      if(eq.value === 'Outro') document.getElementById('equipeOutroWrap').hidden = false;
     }catch(_){}
   }
 
@@ -416,11 +361,6 @@
       else if(camisa.value === 'sim' && !document.getElementById('tamanho').value){
         markInvalid('tamanho', true); ok = false;
       }
-      const eq = document.getElementById('equipe').value;
-      if(!eq){ markInvalid('equipe', true); ok = false; }
-      if(eq === 'Outro' && !document.getElementById('equipeOutro').value.trim()){
-        markInvalid('equipeOutro', true); ok = false;
-      }
       if(!document.getElementById('anoCor').value.trim()){
         markInvalid('anoCor', true); ok = false;
       }
@@ -431,17 +371,9 @@
       if(!document.getElementById('oracao').value.trim()){ markInvalid('oracao', true); ok = false; }
       const sacs = [...document.querySelectorAll('#sacramentos input:checked')];
       if(!sacs.length){ markInvalid('sacramentos', true); ok = false; }
-      if(document.getElementById('sacOutroCheck').checked && !document.getElementById('sacOutro').value.trim()){
-        markInvalid('sacramentos', true); ok = false;
-      }
       if(!document.getElementById('consentCheck').checked){
         markInvalid('consentCheck', true);
         showError('Marque a declaração no final do formulário para confirmar.');
-        ok = false;
-      }
-      const file = document.getElementById('foto').files[0];
-      if(file && file.size > 5.5 * 1024 * 1024){
-        showError('A foto deve ter no máximo cerca de 5 MB.');
         ok = false;
       }
     }
@@ -468,15 +400,8 @@
     const nome = document.getElementById('nome').value.trim();
     const tel = telefone.value.trim();
     const camisa = form.querySelector('input[name="camisa"]:checked')?.value || null;
-    let equipe = document.getElementById('equipe').value;
-    if(equipe === 'Outro') equipe = document.getElementById('equipeOutro').value.trim();
 
-    let sacramentos = [...document.querySelectorAll('#sacramentos input:checked')].map(i=>i.value);
-    if(sacramentos.includes('Outro')){
-      const outro = document.getElementById('sacOutro').value.trim();
-      sacramentos = sacramentos.filter(s => s !== 'Outro');
-      if(outro) sacramentos.push(outro);
-    }
+    const sacramentos = [...document.querySelectorAll('#sacramentos input:checked')].map(i=>i.value);
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Enviando…';
@@ -491,17 +416,6 @@
         return;
       }
 
-      let foto_url = null;
-      const file = document.getElementById('foto').files[0];
-      if(file){
-        try{
-          foto_url = await window.COR_API.uploadServoFoto(file);
-        }catch(upErr){
-          console.warn(upErr);
-          /* foto é opcional — segue sem ela se o storage falhar */
-        }
-      }
-
       const row = {
         nome,
         idade: parseInt(idade.value, 10),
@@ -510,12 +424,12 @@
         telefone: tel,
         camisa,
         tamanho_camisa: camisa === 'sim' ? (document.getElementById('tamanho').value || null) : null,
-        equipe,
+        equipe: '',
         ano_cor_jovem: document.getElementById('anoCor').value.trim(),
         marco_cor: document.getElementById('marcoCor').value.trim(),
         oracao_sacramentos: document.getElementById('oracao').value.trim(),
         sacramentos,
-        foto_url,
+        foto_url: null,
         status: 'nova'
       };
 

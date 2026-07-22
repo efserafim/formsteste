@@ -211,7 +211,7 @@ create table if not exists public.servos_cor_jovem (
 
   camisa text,
   tamanho_camisa text,
-  equipe text not null,
+  equipe text,
   ano_cor_jovem text not null,
   marco_cor text not null,
   oracao_sacramentos text not null,
@@ -259,6 +259,9 @@ create policy "Servos delete equipe"
   on public.servos_cor_jovem for delete to authenticated using (true);
 
 grant select, insert, update, delete on public.servos_cor_jovem to anon, authenticated;
+
+-- Equipe passa a ser opcional (definida pela organização no painel)
+alter table public.servos_cor_jovem alter column equipe drop not null;
 
 create or replace function public.buscar_servo_telefone(p_digits text)
 returns table (id uuid, nome text, status text)

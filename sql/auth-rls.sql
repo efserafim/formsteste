@@ -61,6 +61,9 @@ create policy "Servos update equipe"
 create policy "Servos delete equipe"
   on public.servos_cor_jovem for delete to authenticated using (true);
 
+-- Equipe opcional: preenchida depois no dashboard
+alter table public.servos_cor_jovem alter column equipe drop not null;
+
 create or replace function public.count_inscricoes_ativas()
 returns bigint language sql security definer set search_path = public stable as $$
   select count(*)::bigint from public.inscricoes_cor_jovem

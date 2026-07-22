@@ -83,7 +83,11 @@
   <div class="board">
     <div class="board-head">
       <h2>Sua ficha</h2>
-      <p>Quatro passos. Sem pressa — mas as vagas acabam quando as fichas acabam.</p>
+      <p>Quatro passos para garantir sua vaga no retiro. Preencha com atenção — as vagas são limitadas.</p>
+      <aside class="form-notice" role="note">
+        <strong>Atenção</strong>
+        <p>Preencha com cuidado e com informações verdadeiras. Esses dados são essenciais para a organização e o bom andamento do retiro.</p>
+      </aside>
     </div>
 
     <form id="regForm" novalidate>
@@ -170,11 +174,6 @@
 
         <div class="callout" id="minorBox">
           <p class="callout-title">Contato do responsável (menor de 18 anos)</p>
-          <div class="field tight">
-            <label class="lbl" for="respNome">Nome do responsável <span class="req">*</span></label>
-            <input class="ctrl" type="text" id="respNome" placeholder="Pai, mãe ou responsável">
-            <p class="field-error" data-for="respNome">Informe o nome do responsável.</p>
-          </div>
           <div class="field tight" style="margin-bottom:10px;">
             <label class="lbl" for="respTel">Telefone do responsável <span class="req">*</span></label>
             <input class="ctrl" type="tel" id="respTel" inputmode="numeric" placeholder="(21) 90000-0000">
@@ -315,13 +314,13 @@
             <select class="ctrl" id="tamanho">
               <option value="">Selecione</option>
               <option>PP</option><option>P</option><option>M</option>
-              <option>G</option><option>GG</option><option>XG</option>
+              <option>G</option><option>GG</option><option>XG</option><option>XXG</option>
             </select>
           </div>
         </div>
         <div class="field">
           <div class="consent">
-            <p>Declaro que as informações preenchidas nesta ficha são verdadeiras e autorizo minha participação no XVI C.O.R Jovem, nos dias 12 e 13 de setembro.</p>
+            <p>Declaro que as informações preenchidas nesta ficha são verdadeiras e autorizo minha participação no XVI C.O.R Jovem, nos dias 12 e 13 de setembro. Entendo que dados corretos são importantes para o bom andamento do retiro.</p>
             <label class="consent-check">
               <input type="checkbox" id="consentCheck" required>
               <span>Li e confirmo as informações acima</span>
@@ -331,6 +330,11 @@
         </div>
         <div class="callout" id="respConsentBox">
           <p class="callout-title">Autorização do responsável</p>
+          <div class="field tight">
+            <label class="lbl" for="respNome">Nome do responsável <span class="req">*</span></label>
+            <input class="ctrl" type="text" id="respNome" placeholder="Nome completo do responsável" autocomplete="name">
+            <p class="field-error" data-for="respNome">Informe o nome do responsável.</p>
+          </div>
           <div class="field tight">
             <label class="lbl" for="respCpf">CPF do responsável <span class="req">*</span></label>
             <input class="ctrl" type="text" id="respCpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
@@ -355,7 +359,7 @@
 
     <div class="success" id="successPanel">
       <div class="badge" aria-hidden="true">✓</div>
-      <h2>No cume!</h2>
+      <h2>Inscrição enviada!</h2>
       <p>Que alegria, <span class="name" id="successName"></span>!</p>
       <p>Sua inscrição no XVI C.O.R Jovem está confirmada. Fique de olho no WhatsApp — a organização envia o próximo passo em breve.</p>
       <p class="privacy" style="margin-top:18px" id="successId"></p>
@@ -611,9 +615,7 @@
       if(!uf){ ok = false; showError('Selecione a UF.'); }
 
       if(isMinor()){
-        const rn = document.getElementById('respNome').value.trim();
         const rt = document.getElementById('respTel').value.trim();
-        if(!rn){ setFieldError('respNome', true); ok = false; }
         if(!phoneOk(rt)){ setFieldError('respTel', true); ok = false; }
       }
     }
@@ -632,7 +634,9 @@
         setFieldError('consentCheck', true); ok = false;
       }
       if(isMinor()){
+        const rn = document.getElementById('respNome').value.trim();
         const cpf = document.getElementById('respCpf').value.replace(/\D/g,'');
+        if(!rn){ setFieldError('respNome', true); ok = false; }
         if(cpf.length !== 11){ setFieldError('respCpf', true); ok = false; }
         if(!document.getElementById('respConsentCheck').checked){
           setFieldError('respConsentCheck', true); ok = false;
