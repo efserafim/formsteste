@@ -6,612 +6,9 @@
 <title>XVI C.O.R Jovem — Inscrição</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Oswald:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --sky-top: #8eb8d4;
-    --sky-mid: #c5d9e8;
-    --sky-low: #e8eef3;
-    --ice: #f4f8fb;
-    --granite: #2a3238;
-    --slate: #4a5560;
-    --mist: #c5ced6;
-    --rope: #c45c26;
-    --rope-soft: rgba(196,92,38,.14);
-    --glacier: #2f6f8f;
-    --snow: #ffffff;
-    --ok: #2a8f52;
-    --err: #9c4a3a;
-    --err-bg: #f5e8e4;
-    --ease: cubic-bezier(.22,.7,.25,1);
-  }
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
 
-  *{ box-sizing:border-box; }
-  html,body{ margin:0; padding:0; }
-  body{
-    font-family:'Source Sans 3', sans-serif;
-    color: var(--granite);
-    min-height:100vh;
-    background:
-      radial-gradient(ellipse 100% 60% at 50% -5%, #d4e4f0 0%, transparent 55%),
-      linear-gradient(180deg, var(--sky-mid) 0%, var(--sky-low) 35%, #dfe7ee 100%);
-    overflow-x:hidden;
-  }
-
-  /* —— Hero altitude —— */
-  .hero{
-    position:relative;
-    min-height: min(52vh, 420px);
-    overflow:hidden;
-    background:
-      radial-gradient(ellipse 80% 50% at 70% 10%, rgba(255,255,255,.55) 0%, transparent 50%),
-      linear-gradient(180deg, #9bc0d8 0%, #b7d0e2 40%, #d5e2ec 70%, #e8eef3 100%);
-  }
-  .hero::after{
-    content:"";
-    position:absolute; inset:0;
-    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-    pointer-events:none; opacity:.5;
-  }
-
-  .stars span{
-    position:absolute; width:2px; height:2px; border-radius:50%;
-    background: rgba(42,50,56,.45);
-  }
-  .stars span:nth-child(1){ top:18%; left:12%; }
-  .stars span:nth-child(2){ top:12%; left:68%; }
-  .stars span:nth-child(3){ top:28%; left:42%; }
-  .stars span:nth-child(4){ top:8%; left:88%; }
-
-  .ridge{
-    position:absolute; left:0; right:0; bottom:0; width:100%;
-  }
-  .ridge.far{
-    height:38%;
-    background:#7a8f9e;
-    clip-path: polygon(0 100%, 0 62%, 8% 48%, 18% 58%, 28% 35%, 40% 52%, 52% 28%, 64% 48%, 76% 32%, 88% 50%, 100% 40%, 100% 100%);
-    opacity:.55;
-  }
-  .ridge.mid{
-    height:46%;
-    background:#4d5d68;
-    clip-path: polygon(0 100%, 0 70%, 12% 42%, 24% 60%, 36% 30%, 48% 55%, 60% 22%, 72% 48%, 84% 34%, 100% 45%, 100% 100%);
-    opacity:.85;
-  }
-  .ridge.near{
-    height:54%;
-    background: var(--granite);
-    clip-path: polygon(0 100%, 0 58%, 10% 40%, 20% 55%, 32% 18%, 44% 48%, 55% 12%, 68% 42%, 80% 24%, 92% 50%, 100% 36%, 100% 100%);
-  }
-
-  .hero-inner{
-    position:relative; z-index:4;
-    max-width:720px; margin:0 auto;
-    padding: 36px 22px 120px;
-    text-align:center;
-  }
-  .parish{
-    margin:0 0 14px;
-    font-size:11px; font-weight:700;
-    letter-spacing:.14em; text-transform:uppercase;
-    color: var(--slate);
-  }
-  .brand{
-    margin:0;
-    font-family:'Oswald', sans-serif;
-    font-weight:700;
-    font-size: clamp(52px, 14vw, 84px);
-    line-height:.88;
-    letter-spacing:.02em;
-    text-transform:uppercase;
-    color: var(--granite);
-  }
-  .brand em{
-    display:block;
-    font-style:normal;
-    font-size:.42em;
-    letter-spacing:.18em;
-    color: var(--rope);
-    margin-top:6px;
-  }
-  .motto{
-    position:absolute; z-index:5;
-    right: max(18px, 8vw);
-    bottom: 72px;
-    font-family:'Caveat', cursive;
-    font-weight:700;
-    font-size: clamp(30px, 7vw, 44px);
-    color: var(--snow);
-    transform: rotate(-6deg);
-    text-shadow: 0 2px 10px rgba(0,0,0,.35);
-    pointer-events:none;
-  }
-
-  .trail{
-    max-width:720px; margin: -28px auto 0; padding: 0 16px;
-    position:relative; z-index:6;
-  }
-  .trail-card{
-    background: rgba(244,248,251,.92);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.7);
-    border-radius: 4px;
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    box-shadow: 0 18px 40px -22px rgba(42,50,56,.45);
-    overflow:hidden;
-  }
-  .trail-card > div{
-    padding: 16px 12px;
-    text-align:center;
-  }
-  .trail-card > div + div{ border-left: 1px solid var(--mist); }
-  .trail-card .k{
-    display:block;
-    font-size:10px; font-weight:700;
-    letter-spacing:.14em; text-transform:uppercase;
-    color: var(--rope); margin-bottom:4px;
-  }
-  .trail-card .v{
-    font-family:'Oswald', sans-serif;
-    font-size:20px; letter-spacing:.04em;
-    color: var(--granite); line-height:1.1;
-  }
-  .trail-card .v.sm{
-    font-family:'Source Sans 3', sans-serif;
-    font-size:13px; font-weight:700;
-    color: var(--slate);
-  }
-
-  .quote-band{
-    max-width:720px; margin: 18px auto 0; padding: 0 16px;
-  }
-  .quote-band blockquote{
-    margin:0;
-    padding: 18px 22px;
-    background: var(--granite);
-    color: var(--snow);
-    border-radius: 4px;
-    text-align:center;
-  }
-  .quote-band p{
-    margin:0;
-    font-family:'Caveat', cursive;
-    font-size: clamp(22px, 4.5vw, 28px);
-    line-height:1.25;
-  }
-  .quote-band cite{
-    display:block; margin-top:8px;
-    font-style:normal;
-    font-size:11px; font-weight:700;
-    letter-spacing:.1em; text-transform:uppercase;
-    color: #e0a07a;
-  }
-
-  /* —— Santos peeping (SVG) —— */
-  .saint-peeks{
-    position:fixed; inset:0;
-    pointer-events:none;
-    z-index:8;
-    overflow:hidden;
-  }
-  .peek{
-    position:absolute;
-    width: 150px;
-    opacity:0;
-    transition: opacity .4s var(--ease);
-  }
-  .peek.on{ opacity:1; }
-  .peek-left{ left: 0; }
-  .peek-right{ right: 0; }
-  .peek[data-i="0"]{ top: 20%; }
-  .peek[data-i="1"]{ top: 48%; }
-  .peek[data-i="2"]{ top: 16%; }
-  .peek[data-i="3"]{ top: 52%; }
-
-  .peek-fig{
-    width: 140px;
-    height: 180px;
-    overflow:hidden;
-    filter: drop-shadow(0 10px 18px rgba(42,50,56,.32));
-    transform: translateX(-78%);
-    transition: transform .75s var(--ease);
-  }
-  .peek-right .peek-fig{
-    margin-left:auto;
-    transform: translateX(78%);
-  }
-  .peek.on .peek-fig{ transform: translateX(0); }
-  .peek-right.on .peek-fig{ transform: translateX(0); }
-  .peek-fig img{
-    display:block;
-    width:100%;
-    height:100%;
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  .peek-bubble{
-    position:absolute;
-    top: 10px;
-    width: 168px;
-    padding: 9px 11px 11px;
-    background: #fffef8;
-    color: var(--granite);
-    border: 2.5px solid var(--granite);
-    border-radius: 14px 14px 14px 5px;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.3;
-    box-shadow: 3px 3px 0 var(--granite);
-    opacity:0;
-    visibility:hidden;
-    transform: scale(.7);
-    transform-origin: left center;
-    z-index:2;
-  }
-  .peek-left .peek-bubble{ left: 118px; }
-  .peek-right .peek-bubble{
-    right: 118px; left: auto;
-    border-radius: 14px 14px 5px 14px;
-    transform-origin: right center;
-  }
-  .peek-bubble.show{
-    visibility:visible;
-    animation: bubbleIn .4s var(--ease) forwards;
-  }
-  .peek-bubble.hide{
-    visibility:visible;
-    animation: bubbleOut .3s ease forwards;
-  }
-  .peek-bubble::after{
-    content:"";
-    position:absolute;
-    bottom: 14px;
-    width: 12px; height: 12px;
-    background: #fffef8;
-    border-right: 2.5px solid var(--granite);
-    border-bottom: 2.5px solid var(--granite);
-    transform: rotate(-45deg);
-  }
-  .peek-left .peek-bubble::after{ left: -6px; right:auto; transform: rotate(45deg); border-right:none; border-left:2.5px solid var(--granite); }
-  .peek-right .peek-bubble::after{ right: -6px; left:auto; }
-  .peek-bubble .who{
-    display:block;
-    font-size:9px; font-weight:800;
-    letter-spacing:.08em; text-transform:uppercase;
-    color: var(--rope); margin-bottom:3px;
-  }
-  @keyframes bubbleIn{
-    from{ opacity:0; transform:scale(.7); }
-    to{ opacity:1; transform:scale(1); }
-  }
-  @keyframes bubbleOut{
-    to{ opacity:0; transform:scale(.85); }
-  }
-
-  /* Tablet */
-  @media (max-width: 1100px){
-    .peek{ width: 120px; }
-    .peek-fig{ width: 110px; height: 140px; }
-    .peek-left .peek-bubble{ left: 92px; width: 150px; }
-    .peek-right .peek-bubble{ right: 92px; width: 150px; }
-    .peek-bubble{ font-size: 11.5px; }
-  }
-
-  /* Celular: saem de baixo, balão em cima — não cobrem o formulário */
-  @media (max-width: 720px){
-    body{ padding-bottom: 140px; }
-    .saint-peeks{
-      z-index: 12;
-    }
-    .peek{
-      width: auto;
-      top: auto !important;
-      bottom: max(10px, env(safe-area-inset-bottom));
-      max-width: 46vw;
-    }
-    .peek-left,
-    .peek[data-i="0"],
-    .peek[data-i="1"]{
-      left: 2px;
-      right: auto;
-    }
-    .peek-right,
-    .peek[data-i="2"],
-    .peek[data-i="3"]{
-      right: 2px;
-      left: auto;
-    }
-
-    .peek-fig{
-      width: 92px;
-      height: 118px;
-      transform: translateY(78%);
-      border-radius: 10px 10px 0 0;
-    }
-    .peek-right .peek-fig{
-      margin-left: 0;
-      transform: translateY(78%);
-    }
-    .peek.on .peek-fig,
-    .peek-right.on .peek-fig{
-      transform: translateY(0);
-    }
-
-    .peek-bubble{
-      top: auto;
-      bottom: calc(100% + 8px);
-      width: min(210px, 72vw);
-      max-width: 72vw;
-      font-size: 11.5px;
-      padding: 8px 10px 10px;
-      transform-origin: bottom center;
-      border-radius: 14px;
-    }
-    .peek-left .peek-bubble{
-      left: 4px;
-      right: auto;
-    }
-    .peek-right .peek-bubble{
-      right: 4px;
-      left: auto;
-    }
-    .peek-bubble::after{
-      bottom: -6px;
-      left: 28px !important;
-      right: auto !important;
-      border-left: none !important;
-      border-right: 2.5px solid var(--granite);
-      border-bottom: 2.5px solid var(--granite);
-      transform: rotate(45deg);
-    }
-    .peek-right .peek-bubble::after{
-      left: auto !important;
-      right: 28px !important;
-    }
-  }
-
-  @media (max-width: 380px){
-    .peek-fig{ width: 78px; height: 100px; }
-    .peek-bubble{ width: min(180px, 70vw); font-size: 11px; }
-  }
-
-  /* —— Formulário —— */
-  .climb{
-    max-width:640px;
-    margin: 28px auto 64px;
-    padding: 0 16px;
-    position:relative;
-  }
-  .board{
-    position:relative;
-    background: var(--ice);
-    border: 1px solid rgba(197,206,214,.8);
-    border-radius: 4px;
-    box-shadow: 0 24px 50px -28px rgba(42,50,56,.4);
-    overflow:hidden;
-  }
-
-  .board-head{
-    padding: 22px 24px 0;
-    border-bottom: 1px solid var(--mist);
-  }
-  .board-head h2{
-    margin:0 0 6px;
-    font-family:'Oswald', sans-serif;
-    font-size:28px; letter-spacing:.04em;
-    text-transform:uppercase; font-weight:600;
-  }
-  .board-head p{
-    margin:0 0 16px;
-    color: var(--slate); font-size:14.5px;
-  }
-
-  .progress{
-    display:flex; gap:6px; padding: 16px 24px 0;
-  }
-  .progress span{
-    flex:1; height:3px; border-radius:2px;
-    background: var(--mist);
-    transition: background .3s var(--ease);
-  }
-  .progress span.done{ background: var(--granite); }
-  .progress span.current{ background: var(--rope); }
-
-  .step-label{
-    padding: 10px 24px 0;
-    font-size:12.5px; font-weight:700;
-    color: var(--slate); letter-spacing:.03em;
-  }
-  .step-label strong{ color: var(--granite); }
-
-  form{ padding: 4px 24px 28px; }
-  .step{ display:none; }
-  .step.active{ display:block; }
-  .section-lead{
-    font-size:14px; color:var(--slate);
-    margin: 8px 0 4px; line-height:1.45;
-  }
-
-  .field{ margin-top:14px; }
-  .field.tight{ margin-top:10px; }
-  .lbl{
-    display:block; font-size:12.5px; font-weight:700;
-    color:#3a444c; margin-bottom:6px;
-  }
-  .lbl .opt{ font-weight:500; color:#8a949c; }
-  .lbl .req{ color: var(--rope); }
-
-  .ctrl{
-    width:100%; padding:12px 13px;
-    border-radius:3px;
-    border:1.5px solid var(--mist);
-    font: inherit; font-size:15px;
-    background: var(--snow); color: var(--granite);
-    transition: border-color .15s, box-shadow .15s;
-  }
-  .ctrl:focus{
-    outline:none;
-    border-color: var(--glacier);
-    box-shadow: 0 0 0 3px rgba(47,111,143,.15);
-  }
-  .ctrl.is-invalid{
-    border-color: var(--err);
-    box-shadow: 0 0 0 3px rgba(156,74,58,.12);
-  }
-  textarea.ctrl{ min-height:80px; resize:vertical; }
-  select.ctrl{
-    appearance:none; cursor:pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%234a5560' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat:no-repeat; background-position:right 14px center;
-    padding-right:36px;
-  }
-
-  .row2{ display:flex; gap:10px; }
-  .row2 > *{ flex:1; min-width:0; }
-  .row3{ display:grid; grid-template-columns:1.4fr 1.4fr .7fr; gap:10px; }
-  @media(max-width:480px){
-    .row2,.row3{ display:grid; grid-template-columns:1fr; }
-  }
-
-  .hint{ font-size:12px; color:var(--slate); font-weight:600; margin:4px 0 0; }
-  .field-error{
-    display:none; font-size:12px; font-weight:600;
-    color:var(--err); margin-top:5px;
-  }
-  .field-error.show{ display:block; }
-
-  .choice-group{ display:flex; gap:8px; flex-wrap:wrap; }
-  .choice{
-    flex:1; min-width:72px; text-align:center;
-    padding:11px 12px; border-radius:3px;
-    border:1.5px solid var(--mist); background:var(--snow);
-    font-size:13.5px; font-weight:700; color:var(--slate);
-    cursor:pointer; transition: .15s;
-  }
-  .choice input{ position:absolute; opacity:0; pointer-events:none; }
-  .choice.active{
-    border-color: var(--rope);
-    background: var(--rope-soft);
-    color: var(--granite);
-  }
-
-  .check-grid{ display:flex; flex-wrap:wrap; gap:8px; }
-  .chk{
-    display:flex; align-items:center; gap:7px;
-    padding:9px 12px; border-radius:3px;
-    border:1.5px solid var(--mist); background:var(--snow);
-    font-size:13px; font-weight:700; color:var(--slate);
-    cursor:pointer;
-  }
-  .chk input{ accent-color: var(--rope); width:15px; height:15px; }
-  .chk.active{
-    border-color: var(--rope);
-    background: var(--rope-soft);
-    color: var(--granite);
-  }
-
-  .conditional{ display:none; margin-top:10px; }
-  .conditional.show{ display:block; }
-
-  .callout{
-    display:none; margin-top:16px; padding:14px 14px 6px;
-    background: #e8eef3; border:1.5px dashed var(--glacier); border-radius:3px;
-  }
-  .callout.show{ display:block; }
-  .callout-title{
-    margin:0 0 8px; font-size:12.5px; font-weight:800; color: var(--glacier);
-  }
-
-  .consent{
-    background:#e8eef3; border-radius:3px; padding:16px; margin-top:8px;
-  }
-  .consent p{ margin:0 0 14px; font-size:12.5px; color:var(--slate); line-height:1.55; }
-  .consent-check{ display:flex; gap:10px; align-items:flex-start; cursor:pointer; }
-  .consent-check input{ margin-top:2px; width:17px; height:17px; accent-color:var(--granite); flex-shrink:0; }
-  .consent-check span{ font-size:13px; font-weight:700; line-height:1.45; }
-
-  .nav{ display:flex; gap:10px; margin-top:26px; }
-  .btn{
-    flex:1; padding:14px 16px; border:none; border-radius:3px;
-    font-family:'Oswald', sans-serif; font-size:17px;
-    letter-spacing:.06em; text-transform:uppercase;
-    cursor:pointer; transition: .15s;
-  }
-  .btn:active{ transform: scale(.98); }
-  .btn:disabled{ opacity:.55; cursor:default; transform:none; }
-  .btn-ghost{
-    flex:0 0 auto; min-width:100px;
-    background:transparent; color:var(--slate);
-    border:1.5px solid var(--mist);
-  }
-  .btn-primary{ background: var(--granite); color: var(--snow); }
-  .btn-primary:hover{ background:#1c2227; }
-
-  .privacy{
-    text-align:center; font-size:11.5px; color:#8a949c;
-    margin-top:12px; font-weight:600;
-  }
-  .banner-err{
-    display:none; margin-top:14px; padding:11px 14px;
-    background:var(--err-bg); color:var(--err);
-    border-radius:3px; font-size:13px; font-weight:600;
-  }
-  .banner-err.show{ display:block; }
-
-  .success{
-    display:none; padding:52px 28px 48px; text-align:center;
-  }
-  .success.show{ display:block; }
-  .success .badge{
-    width:68px; height:68px; border-radius:50%; margin:0 auto 18px;
-    background: rgba(42,143,82,.12); color:var(--ok);
-    display:flex; align-items:center; justify-content:center; font-size:28px;
-  }
-  .success h2{
-    font-family:'Oswald', sans-serif; font-size:30px;
-    margin:0 0 10px; letter-spacing:.03em; text-transform:uppercase;
-  }
-  .success p{ font-size:14.5px; color:var(--slate); line-height:1.55; margin:0 0 6px; }
-  .success .name{ color:var(--granite); font-weight:800; }
-
-  .closed{
-    display:none; padding:48px 28px 44px; text-align:center;
-  }
-  .closed.show{ display:block; }
-  .closed .badge{
-    width:68px; height:68px; border-radius:50%; margin:0 auto 18px;
-    background: var(--rope-soft); color: var(--rope);
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Oswald',sans-serif; font-size:22px; font-weight:700;
-  }
-  .closed h2{
-    font-family:'Oswald', sans-serif; font-size:30px;
-    margin:0 0 12px; letter-spacing:.03em; text-transform:uppercase;
-  }
-  .closed p{ font-size:14.5px; color:var(--slate); line-height:1.55; margin:0 0 8px; }
-  .closed .spots{
-    display:inline-block; margin-top:14px; padding:8px 14px;
-    background:#e8eef3; border-radius:3px;
-    font-size:12.5px; font-weight:800; color:var(--glacier);
-    letter-spacing:.04em; text-transform:uppercase;
-  }
-
-  .sr-only{
-    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
-    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
-  }
-
-  @media (max-width:520px){
-    .trail-card{ grid-template-columns:1fr; }
-    .trail-card > div + div{ border-left:none; border-top:1px solid var(--mist); }
-    .hero-inner{ padding-bottom:100px; }
-  }
-  @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{ animation:none !important; transition:none !important; }
-  }
-</style>
 </head>
 <body>
 
@@ -643,39 +40,50 @@
 </div>
 
 <header class="hero" aria-label="XVI C.O.R Jovem">
-  <div class="stars" aria-hidden="true">
-    <span></span><span></span><span></span><span></span>
-  </div>
+  <img class="hero-photo" src="image/montanha-azul.jpg" alt="" width="1600" height="900" decoding="async" fetchpriority="high">
   <div class="hero-inner">
+    <div class="hero-logos" aria-label="Parceiros">
+      <img class="hero-logo hero-logo-pascom" src="image/logo-1.png" alt="Pascom — Paróquia Santo Antônio" width="120" height="160" decoding="async">
+      <img class="hero-logo hero-logo-geracao" src="image/logo-2.png" alt="Geração Eucarística" width="120" height="120" decoding="async">
+    </div>
     <p class="parish">Paróquia Santo Antônio — Bacaxá · Arquidiocese de Niterói</p>
     <h1 class="brand">XVI C.O.R<em>Jovem</em></h1>
+    <a class="hero-cta" href="#inscricao">Começar inscrição</a>
   </div>
-  <div class="ridge far" aria-hidden="true"></div>
-  <div class="ridge mid" aria-hidden="true"></div>
-  <div class="ridge near" aria-hidden="true"></div>
   <span class="motto" aria-hidden="true">Verso l'alto</span>
 </header>
 
-<div class="trail" id="trailMeta">
-  <div class="trail-card" aria-label="Informações do retiro">
-    <div><span class="k">Retiro</span><span class="v">12 e 13 · SET</span></div>
-    <div><span class="k">Idade</span><span class="v sm">15 a 24 anos</span></div>
-    <div><span class="k">Inscrições</span><span class="v sm" id="trailInsc">até 16/08</span></div>
+<section class="showcase" aria-label="Sobre o retiro">
+  <div class="trail" id="trailMeta">
+    <div class="trail-card">
+      <div>
+        <span class="k">Retiro</span>
+        <span class="v">12 e 13 · SET</span>
+      </div>
+      <div>
+        <span class="k">Idade</span>
+        <span class="v sm">15 a 24 anos</span>
+      </div>
+      <div>
+        <span class="k">Inscrições</span>
+        <span class="v sm" id="trailInsc">até acabar as vagas</span>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="quote-band" id="quoteBand">
-  <blockquote>
-    <p>“Quanto mais alto formos, melhor ouvimos a voz de Cristo.” ❤️‍🔥</p>
-    <cite>— Beato Pier Giorgio Frassati</cite>
-  </blockquote>
-</div>
+  <div class="quote-band" id="quoteBand">
+    <blockquote>
+      <p>“Quanto mais alto formos, melhor ouvimos a voz de Cristo.”</p>
+      <cite>— Beato Pier Giorgio Frassati</cite>
+    </blockquote>
+  </div>
+</section>
 
-<main class="climb">
+<main class="climb" id="inscricao">
   <div class="board">
     <div class="board-head">
-      <h2>Inscrição</h2>
-      <p>Suba com a gente. Quatro passos até o topo.</p>
+      <h2>Sua ficha</h2>
+      <p>Quatro passos. Sem pressa — mas as vagas acabam quando as fichas acabam.</p>
     </div>
 
     <form id="regForm" novalidate>
@@ -862,9 +270,23 @@
               <p class="field-error" data-for="urgenciaNome">Informe o nome.</p>
             </div>
             <div>
-              <input class="ctrl" type="tel" id="urgenciaTel" inputmode="numeric" required placeholder="(21) 90000-0000">
-              <p class="field-error" data-for="urgenciaTel">Informe o telefone.</p>
+              <select class="ctrl" id="urgenciaParentesco" required>
+                <option value="">Parentesco</option>
+                <option value="Pai">Pai</option>
+                <option value="Mãe">Mãe</option>
+                <option value="Avô/Avó">Avô/Avó</option>
+                <option value="Irmão/Irmã">Irmão/Irmã</option>
+                <option value="Tio/Tia">Tio/Tia</option>
+                <option value="Cônjuge">Cônjuge</option>
+                <option value="Responsável legal">Responsável legal</option>
+                <option value="Outro">Outro</option>
+              </select>
+              <p class="field-error" data-for="urgenciaParentesco">Informe o parentesco.</p>
             </div>
+          </div>
+          <div style="margin-top:10px;">
+            <input class="ctrl" type="tel" id="urgenciaTel" inputmode="numeric" required placeholder="(21) 90000-0000">
+            <p class="field-error" data-for="urgenciaTel">Informe o telefone.</p>
           </div>
         </div>
       </section>
@@ -979,7 +401,7 @@
     'nome','nascimento','whatsapp','endereco','bairro','cidade','uf',
     'rede1','rede1nome','respNome','respTel','respCpf',
     'movimento','missasOnde','comorbidadeQual','medicamentoQual','alergiaQual',
-    'urgenciaNome','urgenciaTel','comoSoube','expectativa','tamanho'
+    'urgenciaNome','urgenciaParentesco','urgenciaTel','comoSoube','expectativa','tamanho'
   ];
   const RADIO_NAMES = [
     'paisCatolicos','ehCatolico','missas','comorbidade','medicamento','alergia','camisa'
@@ -1168,7 +590,6 @@
     submitBtn.hidden = current !== STEPS.length - 1;
     clearBanner();
     saveDraft();
-    form.querySelector('.step.active').scrollIntoView({ behavior:'smooth', block:'nearest' });
   }
 
   function validateStep(n){
@@ -1209,8 +630,10 @@
 
     if(n === 2){
       const un = document.getElementById('urgenciaNome').value.trim();
+      const up = document.getElementById('urgenciaParentesco').value;
       const ut = document.getElementById('urgenciaTel').value.trim();
       if(!un){ setFieldError('urgenciaNome', true); ok = false; }
+      if(!up){ setFieldError('urgenciaParentesco', true); ok = false; }
       if(!phoneOk(ut)){ setFieldError('urgenciaTel', true); ok = false; }
     }
 
@@ -1288,6 +711,7 @@
       alergia: rg('alergia'),
       alergia_qual: document.getElementById('alergiaQual').value.trim() || null,
       urgencia_nome: document.getElementById('urgenciaNome').value.trim(),
+      urgencia_parentesco: document.getElementById('urgenciaParentesco').value || null,
       urgencia_telefone: document.getElementById('urgenciaTel').value.trim(),
       como_soube: document.getElementById('comoSoube').value.trim() || null,
       expectativa: document.getElementById('expectativa').value.trim() || null,
@@ -1363,7 +787,7 @@
         showClosed();
       }else if(trail){
         const left = max - count;
-        trail.textContent = left <= 10 ? left + ' vagas' : 'até 16/08';
+        trail.textContent = left <= 10 ? left + ' vagas' : 'até acabar as vagas';
       }
     }catch(err){
       console.error(err);

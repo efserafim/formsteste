@@ -6,11 +6,11 @@
 <title>Equipe — XVI C.O.R Jovem</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#2a3238; --charcoal:#1c2227; --stone:#4a5560; --mist:#c5ced6;
-    --paper:#f4f8fb; --paper2:#e8eef3; --gold:#c45c26; --gold-soft:rgba(196,92,38,.14);
+    --ink:#1e262c; --charcoal:#1c2227; --stone:#5a6570; --mist:#cfd8e0;
+    --paper:#f7fafc; --paper2:#eef3f7; --gold:#c45c26; --gold-soft:rgba(196,92,38,.12);
     --white:#ffffff; --ok:#2a8f52; --err:#9c4a3a;
     --nova:#2f6f8f; --conf:#2a8f52; --espera:#c45c26; --canc:#8a949c;
     --ease:cubic-bezier(.22,.7,.25,1);
@@ -18,7 +18,7 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
-    font-family:'Source Sans 3',sans-serif; color:var(--ink); min-height:100vh;
+    font-family:'Outfit',sans-serif; color:var(--ink); min-height:100vh;
     background:
       radial-gradient(ellipse 90% 50% at 50% -8%, #d4e4f0 0%, transparent 55%),
       linear-gradient(180deg, #c5d9e8 0%, #e8eef3 40%, #dfe7ee 100%);
@@ -54,7 +54,7 @@
   .actions{display:flex;flex-wrap:wrap;gap:8px}
 
   .btn{
-    border:none;border-radius:3px;padding:11px 15px;font:inherit;font-size:13px;font-weight:700;
+    border:none;border-radius:6px;padding:11px 15px;font:inherit;font-size:13px;font-weight:700;
     cursor:pointer;transition:transform .12s,background .15s,opacity .15s;
   }
   .btn:active{transform:scale(.98)}
@@ -94,8 +94,10 @@
   }
 
   .panel{
-    background:var(--paper);border-radius:4px;overflow:hidden;
-    box-shadow:0 12px 32px -18px rgba(0,0,0,.28);
+    background:rgba(247,250,252,.9); border-radius:10px; overflow:hidden;
+    box-shadow:0 1px 0 rgba(255,255,255,.75) inset, 0 16px 40px -22px rgba(0,0,0,.28);
+    border:1px solid rgba(255,255,255,.7);
+    backdrop-filter:blur(12px);
   }
   .table-wrap{overflow-x:auto}
   table{width:100%;border-collapse:collapse;min-width:680px}
@@ -1034,6 +1036,7 @@
         item('Medicamento', r.medicamento==='sim' ? ('Sim — ' + (r.medicamento_qual||'')) : simNao(r.medicamento), true) +
         item('Alergia', r.alergia==='sim' ? ('Sim — ' + (r.alergia_qual||'')) : simNao(r.alergia), true) +
         item('Urgência — nome', r.urgencia_nome) +
+        item('Parentesco', r.urgencia_parentesco) +
         item('Urgência — telefone', r.urgencia_telefone) +
       '</div></div>' +
 
@@ -1088,6 +1091,13 @@
         yesNoSelect('alergia','Alergia', r.alergia) +
         field('alergia_qual','Qual alergia', r.alergia_qual, { full:true }) +
         field('urgencia_nome','Urgência — nome', r.urgencia_nome) +
+        field('urgencia_parentesco','Parentesco', r.urgencia_parentesco, {
+          type:'select',
+          options:[
+            {value:'',label:'—'},
+            'Pai','Mãe','Avô/Avó','Irmão/Irmã','Tio/Tia','Cônjuge','Responsável legal','Outro'
+          ]
+        }) +
         field('urgencia_telefone','Urgência — telefone', r.urgencia_telefone) +
       '</div></div>' +
 
@@ -1145,6 +1155,7 @@
     const cidade = g('cidade');
     const uf = g('uf');
     const urgencia_nome = g('urgencia_nome');
+    const urgencia_parentesco = g('urgencia_parentesco');
     const urgencia_telefone = g('urgencia_telefone');
 
     if(!nome || !nasc || !whatsapp || !endereco || !bairro || !cidade || !uf || !urgencia_nome || !urgencia_telefone){
@@ -1185,6 +1196,7 @@
       alergia: g('alergia') || null,
       alergia_qual: g('alergia_qual') || null,
       urgencia_nome,
+      urgencia_parentesco: urgencia_parentesco || null,
       urgencia_telefone,
       como_soube: g('como_soube') || null,
       expectativa: g('expectativa') || null,
@@ -1519,7 +1531,7 @@
     { id:'tamanho', label:'Tamanho', group:'camisas', get:r => r.tamanho_camisa || '—' },
     { id:'responsavel', label:'Responsável', group:'completo', get:r => r.responsavel_nome },
     { id:'resp_tel', label:'Tel. responsável', group:'completo', get:r => r.responsavel_telefone },
-    { id:'urgencia', label:'Urgência', group:'completo', get:r => [r.urgencia_nome, r.urgencia_telefone].filter(Boolean).join(' — ') },
+    { id:'urgencia', label:'Urgência', group:'completo', get:r => [r.urgencia_nome, r.urgencia_parentesco, r.urgencia_telefone].filter(Boolean).join(' — ') },
     { id:'saude', label:'Saúde', group:'completo', get:r => {
       const bits = [];
       if(r.comorbidade === 'sim') bits.push('Comorbidade: '+(r.comorbidade_qual||'sim'));
@@ -1948,7 +1960,7 @@
         line('Comorbidade', r.comorbidade==='sim'?(r.comorbidade_qual||'Sim'):simNao(r.comorbidade))+
         line('Medicamento', r.medicamento==='sim'?(r.medicamento_qual||'Sim'):simNao(r.medicamento))+
         line('Alergia', r.alergia==='sim'?(r.alergia_qual||'Sim'):simNao(r.alergia))+
-        line('Urgência', (r.urgencia_nome||'')+' — '+(r.urgencia_telefone||''))+
+        line('Urgência', (r.urgencia_nome||'')+' ('+(r.urgencia_parentesco||'—')+') — '+(r.urgencia_telefone||''))+
       '</table>' +
       '<h2 style="font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px">Retiro</h2>' +
       '<table style="width:100%;font-size:13px">' +

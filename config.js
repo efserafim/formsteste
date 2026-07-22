@@ -12,7 +12,7 @@ window.COR_CONFIG = {
     name: 'XVI C.O.R Jovem',
     parish: 'Paróquia Santo Antônio — Bacaxá · Arquidiocese de Niterói',
     dates: '12 e 13 de setembro',
-    deadline: '16/08',
+    deadline: 'até acabarem as vagas',
     ageMin: 15,
     ageMax: 24
   }

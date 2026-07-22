@@ -36,6 +36,7 @@ create table if not exists public.inscricoes_cor_jovem (
   alergia text,
   alergia_qual text,
   urgencia_nome text not null,
+  urgencia_parentesco text,
   urgencia_telefone text not null,
 
   como_soube text,
@@ -54,6 +55,8 @@ alter table public.inscricoes_cor_jovem
   add column if not exists status text not null default 'nova';
 alter table public.inscricoes_cor_jovem
   add column if not exists observacoes text;
+alter table public.inscricoes_cor_jovem
+  add column if not exists urgencia_parentesco text;
 
 -- Decúrias (equipes)
 create table if not exists public.decurias_cor_jovem (
