@@ -111,7 +111,7 @@
       '<article class="ficha">' +
         '<header class="ficha-top">' +
           '<div class="ficha-brand">' +
-            '<img src="image/logos/pascom.png" alt="">' +
+            '<img src="image/logos/geracao-eucaristica.png" alt="">' +
             '<div class="t"><strong>XVI C.O.R Jovem</strong><span>Paróquia Santo Antônio — Bacaxá</span></div>' +
           '</div>' +
           '<div class="ficha-badge">' +

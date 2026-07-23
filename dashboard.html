@@ -21,13 +21,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/dash.css?v=20260723b">
+<link rel="icon" href="image/logos/geracao-eucaristica.png" type="image/png">
+<link rel="apple-touch-icon" href="image/logos/geracao-eucaristica.png">
+<link rel="stylesheet" href="css/dash.css?v=20260723d">
 
 </head>
 <body>
 
 <div class="gate" id="gate">
   <div class="gate-box">
+    <img class="gate-logo" src="image/logos/geracao-eucaristica.png" alt="Geração Eucarística" width="72" height="72" decoding="async">
     <p class="eyebrow">Painel da equipe</p>
     <h1>XVI C.O.R<em>Jovem</em></h1>
     <p>Acesse com o e-mail e a senha da organização. Só a equipe deve entrar aqui.</p>
@@ -46,9 +49,14 @@
 <div class="app" id="app">
   <header class="shell" id="shell">
     <div class="brand">
-      <p class="brand-eyebrow">Painel da equipe</p>
-      <h1>XVI C.O.R <span>Jovem</span></h1>
-      <p class="brand-place" id="subtitle">Paróquia Santo Antônio — Bacaxá</p>
+      <div class="brand-lockup">
+        <img class="brand-logo" src="image/logos/geracao-eucaristica.png" alt="Geração Eucarística" width="52" height="52" decoding="async">
+        <div class="brand-text">
+          <p class="brand-eyebrow">Painel da equipe</p>
+          <h1>XVI C.O.R <span>Jovem</span></h1>
+          <p class="brand-place" id="subtitle">Paróquia Santo Antônio — Bacaxá</p>
+        </div>
+      </div>
       <div class="welcome" id="welcomeBlock" hidden>
         <div class="welcome-avatar" id="welcomeAvatar" aria-hidden="true">?</div>
         <p class="welcome-line">
@@ -305,6 +313,10 @@
       </div>
     </div>
   </div>
+
+  <footer class="site-footer dash-footer">
+    <p><span class="footer-mark" aria-hidden="true">©</span> Paróquia Santo Antônio — Bacaxá — Saquarema/RJ · 2026</p>
+  </footer>
 </div>
 
 <div class="overlay" id="overlay"></div>

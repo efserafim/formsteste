@@ -32,6 +32,7 @@ window.COR_SITE = {
     el.classList.add('contato-equipe');
     el.setAttribute('aria-label', 'Contato da equipe');
     el.innerHTML =
+      '<img class="board-mark contato-mark" src="image/logos/geracao-eucaristica.png" alt="Geração Eucarística" width="56" height="56" decoding="async">' +
       '<h2>Para mais informações</h2>' +
       '<p class="lead">Contato da equipe responsável pelo XVI C.O.R Jovem — fale pelo WhatsApp:</p>' +
       '<ul class="wa-list">' +
