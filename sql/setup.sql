@@ -65,8 +65,12 @@ create table if not exists public.decurias_cor_jovem (
   idade_min integer not null default 15,
   idade_max integer not null default 24,
   decurista_nome text not null,
+  cor text,
   observacoes text
 );
+
+alter table public.decurias_cor_jovem
+  add column if not exists cor text;
 
 alter table public.inscricoes_cor_jovem
   add column if not exists decuria_id uuid references public.decurias_cor_jovem(id) on delete set null;

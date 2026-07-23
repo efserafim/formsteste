@@ -340,4 +340,7 @@ create trigger trg_audit_servos
   after update or delete on public.servos_cor_jovem
   for each row execute function public.log_auditoria_row();
 
+alter table public.decurias_cor_jovem
+  add column if not exists cor text;
+
 notify pgrst, 'reload schema';

@@ -58,6 +58,9 @@ create policy "Servos delete equipe"
 
 alter table public.servos_cor_jovem alter column equipe drop not null;
 
+alter table public.decurias_cor_jovem
+  add column if not exists cor text;
+
 create or replace function public.count_inscricoes_ativas()
 returns bigint language sql security definer set search_path = public stable as $$
   select count(*)::bigint from public.inscricoes_cor_jovem

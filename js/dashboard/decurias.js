@@ -22,11 +22,13 @@
     decurias.forEach(d=>{
       const members = membersOf(d.id);
       const eligible = eligibleForDecuria(d);
+      const cor = /^#[0-9A-Fa-f]{6}$/.test(d.cor || '') ? d.cor : '#c45c26';
       const card = document.createElement('div');
       card.className = 'decuria-card';
+      card.style.borderLeftColor = cor;
       card.innerHTML =
         '<div>' +
-          '<h4>'+esc(d.nome)+'</h4>' +
+          '<h4><span class="decuria-swatch" style="background:'+esc(cor)+'" aria-hidden="true"></span>'+esc(d.nome)+'</h4>' +
           '<div class="meta">Idades <strong>'+esc(d.idade_min)+'–'+esc(d.idade_max)+'</strong> · ' +
             members.length + ' membro(s)<br>Decurista: <strong>'+esc(d.decurista_nome)+'</strong></div>' +
         '</div>' +

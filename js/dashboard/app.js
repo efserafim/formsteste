@@ -277,13 +277,15 @@
     const idade_min = parseInt(document.getElementById('decIdadeMin').value, 10);
     const idade_max = parseInt(document.getElementById('decIdadeMax').value, 10);
     const decurista_nome = document.getElementById('decDecurista').value.trim();
+    const cor = (document.getElementById('decCor').value || '').trim().toLowerCase();
 
     if(!nome || !decurista_nome){ toast('Preencha nome e decurista'); return; }
+    if(!/^#[0-9a-f]{6}$/.test(cor)){ toast('Escolha uma cor válida'); return; }
     if(idade_min > idade_max){ toast('Idade mínima não pode ser maior que a máxima'); return; }
 
     try{
       const saved = await window.COR_API.createDecuria({
-        nome, idade_min, idade_max, decurista_nome
+        nome, idade_min, idade_max, decurista_nome, cor
       });
       const row = Array.isArray(saved) ? saved[0] : saved;
       if(row) decurias.push(row);
@@ -293,10 +295,11 @@
       e.target.reset();
       document.getElementById('decIdadeMin').value = 15;
       document.getElementById('decIdadeMax').value = 24;
+      document.getElementById('decCor').value = '#c45c26';
       toast('Decúria criada');
     }catch(err){
       console.error(err);
-      toast('Erro ao criar. Rode sql/setup.sql no Supabase.');
+      toast('Erro ao criar. Rode no Supabase: alter table decurias_cor_jovem add column if not exists cor text;');
     }
   });
 
